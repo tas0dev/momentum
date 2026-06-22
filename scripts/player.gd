@@ -24,10 +24,21 @@ extends CharacterBody3D
 # 空中での加速上限
 @export var air_speed_cap: float = 3.0
 
+# スライドを開始できる最低速度
+@export var slide_min_speed: float = 6.0
+
+# スライド中の減速度
+@export var slide_friction: float = 4.0
+
+# スライドを終了する速度
+@export var slide_end_speed: float = 0.5
+
 # 着地前に押したジャンプ入力を保持する時間（秒）
 @export_range(0.0, 0.2, 0.005)
+
 var jump_buffer_time: float = 0.08
 var jump_buffer_timer: float = 0.0
+var is_sliding: bool = false
 
 @onready var head: Node3D = $Head
 @onready var speed_label: Label = $HUD/SpeedLabel
@@ -63,11 +74,12 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	update_jump_buffer(delta)
-	var is_jumped_this_frame := handle_jump()
 	
 	apply_gravity(delta)
 	handle_jump()
-	handle_movement(delta)
+	
+	var is_jumped_this_frame := handle_jump()
+	handle_movement(delta, is_jumped_this_frame)
 
 	move_and_slide()
 	update_speed_label()
@@ -77,35 +89,42 @@ func apply_gravity(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= gravity * delta
 
-func handle_movement(delta: float) -> void:
-	var input_vector := Input.get_vector(
-		"move_left",
-		"move_right",
-		"move_forward",
-        "move_backward"
-	)
+func handle_movement(
+		delta: float, 
+		jumped_this_frame
+	) -> void:
+		var input_vector := Input.get_vector(
+			"move_left",
+			"move_right",
+			"move_forward",
+			"move_backward"
+		)
 
-	var local_direction := Vector3(
-		input_vector.x,
-		0.0,
-		input_vector.y
-	)
+		var local_direction := Vector3(
+			input_vector.x,
+			0.0,
+			input_vector.y
+		)
 
-	var direction := transform.basis * local_direction
-	direction.y = 0.0
-	direction = direction.normalized()
-	
-	if is_on_floor() and Input.is_action_pressed("jump"):
-		return
-	
-	if not is_on_floor():
-		accelerate_air(direction, delta)
-		return
-		
-	if direction == Vector3.ZERO:
+		var direction := transform.basis * local_direction
+		direction.y = 0.0
+		direction = direction.normalized()
+
+		update_slide_state()
+
+		if jumped_this_frame or not is_on_floor():
+			is_sliding = false
+			accelerate_air(direction, delta)
+			return
+
+		if is_sliding:
+			apply_slide_friction(delta)
+			return
+
 		apply_ground_friction(delta)
-	else:
-		accelerate_ground(direction, delta)
+
+		if direction != Vector3.ZERO:
+			accelerate_ground(direction, delta)
 
 func accelerate_ground(
 	direction: Vector3,
@@ -129,7 +148,7 @@ func apply_ground_friction(delta: float) -> void:
 	var horizon_velocity := Vector3(
 		velocity.x,
 		0.0,
-		velocity.y
+		velocity.z
 	)
 	
 	var current_speed := horizon_velocity.length()
@@ -175,6 +194,9 @@ func accelerate_air(
 	var speed_now := velocity.dot(wish_direction)
 	var speed_add := air_speed_cap - speed_now
 	
+	if speed_add <= 0.0:
+		return
+	
 	var acceleration_speed := (
 		air_acceleration
 		* air_speed_cap
@@ -194,3 +216,46 @@ func update_jump_buffer(delta: float) -> void:
 			jump_buffer_timer - delta,
 			0.0,
 		)
+
+func update_slide_state() -> void:
+	var horizon_speed := Vector2(
+		velocity.x,
+		velocity.z
+	).length()
+
+	if (
+		Input.is_action_just_pressed("slide")
+		and is_on_floor()
+		and horizon_speed >= slide_min_speed
+	):
+		is_sliding = true
+	
+	if (
+		Input.is_action_just_pressed("slide")
+		and is_on_floor()
+		and horizon_speed >= slide_min_speed
+	):
+		is_sliding = false
+
+func apply_slide_friction(delta: float) -> void:
+	var horizon_velocity := Vector3(
+		velocity.x,
+		0.0,
+		velocity.z
+	)
+	
+	var current_speed := horizon_velocity.length()
+	
+	if current_speed <= 0.001:
+		is_sliding = false
+		return
+		
+	var new_speed = maxf(
+		current_speed - slide_friction * delta,
+		0.0
+	)
+	
+	var speed_scale: float = new_speed / current_speed
+	
+	velocity.x *= speed_scale
+	velocity.z *= speed_scale
