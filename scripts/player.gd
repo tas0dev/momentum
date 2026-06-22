@@ -101,31 +101,53 @@ func handle_movement(delta: float) -> void:
 	if not is_on_floor():
 		accelerate_air(direction, delta)
 		return
-
-	if direction != Vector3.ZERO:
-		velocity.x = move_toward(
-			velocity.x,
-			direction.x * move_speed,
-			acceleration * delta
-		)
-
-		velocity.z = move_toward(
-			velocity.z,
-			direction.z * move_speed,
-			acceleration * delta
-		)
+		
+	if direction == Vector3.ZERO:
+		apply_ground_friction(delta)
 	else:
-		velocity.x = move_toward(
-			velocity.x,
-			0.0,
-			friction * delta
-		)
+		accelerate_ground(direction, delta)
 
-		velocity.z = move_toward(
-			velocity.z,
-			0.0,
-			friction * delta
-		)
+func accelerate_ground(
+	direction: Vector3,
+	delta: float
+) -> void:
+	var current_speed := velocity.dot(direction)
+	var speed_to_add := move_speed - current_speed
+	
+	var acceleration_speed := (
+		acceleration
+		* move_speed
+		* delta
+	)
+	
+	velocity += direction * min(
+		acceleration_speed,
+		speed_to_add
+	)
+	
+func apply_ground_friction(delta: float) -> void:
+	var horizon_velocity := Vector3(
+		velocity.x,
+		0.0,
+		velocity.y
+	)
+	
+	var current_speed := horizon_velocity.length()
+	
+	if current_speed <= 0.001:
+		velocity.x = 0.0
+		velocity.z = 0.0
+		return
+		
+	var new_speed := maxf(
+		current_speed - friction * delta,
+		0.0
+	)
+		
+	var speed_scale := new_speed / current_speed
+	
+	velocity.x *= speed_scale
+	velocity.z *= speed_scale
 
 func handle_jump() -> bool:
 	if jump_buffer_timer > 0.0 and is_on_floor():
