@@ -25,7 +25,7 @@ extends CharacterBody3D
 @export var air_speed_cap: float = 3.0
 
 # スライドを開始できる最低速度
-@export var slide_min_speed: float = 6.0
+@export var slide_min_speed: float = 6
 
 # スライド中の減速度
 @export var slide_friction: float = 4.0
@@ -42,12 +42,16 @@ extends CharacterBody3D
 # 視点の高さが切り替わる速度
 @export var slide_camera_speed: float = 8.0
 
+# しゃがみ中の移動速度
+@export var crouch_speed: float = 3
+
 # 着地前に押したジャンプ入力を保持する時間（秒）
 @export_range(0.0, 0.2, 0.005)
 
 var jump_buffer_time: float = 0.08
 var jump_buffer_timer: float = 0.0
 var is_sliding: bool = false
+var is_crouching: bool = false
 
 @onready var head: Node3D = $Head
 @onready var speed_label: Label = $HUD/SpeedLabel
@@ -121,7 +125,22 @@ func handle_movement(
 		direction = direction.normalized()
 
 		update_slide_state()
-
+		
+		if is_sliding:
+			apply_slide_friction(delta)
+			return
+			
+		if is_crouching:
+			apply_ground_friction(delta)
+			
+			if direction != Vector3.ZERO:
+				accelerate_ground(
+					direction,
+					delta,
+					crouch_speed
+				)
+			
+				
 		if jumped_this_frame or not is_on_floor():
 			is_sliding = false
 			accelerate_air(direction, delta)
@@ -134,18 +153,19 @@ func handle_movement(
 		apply_ground_friction(delta)
 
 		if direction != Vector3.ZERO:
-			accelerate_ground(direction, delta)
+			accelerate_ground(direction, delta, move_speed)
 
 func accelerate_ground(
 	direction: Vector3,
-	delta: float
+	delta: float,
+	target_speed: float
 ) -> void:
 	var current_speed := velocity.dot(direction)
-	var speed_to_add := move_speed - current_speed
+	var speed_to_add := target_speed - current_speed
 	
 	var acceleration_speed := (
 		acceleration
-		* move_speed
+		* target_speed
 		* delta
 	)
 	
@@ -196,8 +216,11 @@ func update_speed_label() -> void:
 	
 	if is_sliding:
 		movement_state = "    SLIDE"
+	elif is_crouching:
+		movement_state = "    CROUCH"
 	else:
 		movement_state = "    RUN"
+		
 	
 	speed_label.text = "SPEED %.1f%s" % [speed, movement_state]
 	
@@ -235,24 +258,45 @@ func update_jump_buffer(delta: float) -> void:
 		)
 
 func update_slide_state() -> void:
-	var horizon_speed := Vector2(
+	var horizontal_speed := Vector2(
 		velocity.x,
 		velocity.z
 	).length()
 
-	if (
-		Input.is_action_pressed("slide")
-		and is_on_floor()
-		and horizon_speed >= slide_min_speed
-	):
-		is_sliding = true
+	# キーを離したら立つ
+	if not Input.is_action_pressed("slide"):
+		is_sliding = false
+		is_crouching = false
+		return
 
+	# キーを押した瞬間だけスライド開始を判定する
+	if Input.is_action_just_pressed("slide"):
+		if (
+			is_on_floor()
+			and horizontal_speed >= slide_min_speed
+		):
+			is_sliding = true
+			is_crouching = false
+		else:
+			is_sliding = false
+			is_crouching = true
+
+		return
+
+	# スライド中に減速したらしゃがみに移行する
 	if (
-		not Input.is_action_pressed("slide")
-		or not is_on_floor()
-		or horizon_speed <= slide_end_speed
+		is_sliding
+		and (
+			not is_on_floor()
+			or horizontal_speed <= slide_end_speed
+		)
 	):
 		is_sliding = false
+		is_crouching = true
+
+	# キーを押し続けている間はしゃがみを維持する
+	if not is_sliding:
+		is_crouching = true
 
 func apply_slide_friction(delta: float) -> void:
 	var horizon_velocity := Vector3(
@@ -280,7 +324,7 @@ func apply_slide_friction(delta: float) -> void:
 func update_slide_camera(delta: float) -> void:
 	var target_height := stand_head_h
 	
-	if is_sliding:
+	if is_sliding or is_crouching:
 		target_height = slide_head_h
 		
 	head.position.y = move_toward(
