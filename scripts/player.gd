@@ -1,11 +1,28 @@
 extends CharacterBody3D
 
+# 地上での最大移動速度
 @export var move_speed: float = 7.0
+
+# 加速度
 @export var acceleration: float = 30.0
+
+# 減速度
 @export var friction: float = 35.0
+
+# ジャンプ速度
 @export var jump_velocity: float = 6.0
+
+# 重力
 @export var gravity: float = 18.0
+
+# マウス感度
 @export var mouse_sensitivity: float = 0.002
+
+# 空中での加速度
+@export var air_acceleration: float = 12.0
+
+# 空中での加速上限
+@export var air_speed_cap: float = 3.0
 
 @onready var head: Node3D = $Head
 @onready var speed_label: Label = $HUD/SpeedLabel
@@ -74,6 +91,10 @@ func handle_movement(delta: float) -> void:
 	var direction := transform.basis * local_direction
 	direction.y = 0.0
 	direction = direction.normalized()
+	
+	if not is_on_floor():
+		accelerate_air(direction, delta)
+		return
 
 	if direction != Vector3.ZERO:
 		velocity.x = move_toward(
@@ -107,3 +128,24 @@ func update_speed_label() -> void:
 	).length()
 	
 	speed_label.text = "SPEED %.1f" % speed
+	
+func accelerate_air(
+	wish_direction: Vector3,
+	delta: float
+) -> void:
+	if wish_direction == Vector3.ZERO:
+		return
+		
+	var speed_now := velocity.dot(wish_direction)
+	var speed_add := air_speed_cap - speed_now
+	
+	var acceleration_speed := (
+		air_acceleration
+		* air_speed_cap
+		* delta
+	)
+	
+	velocity += wish_direction * min(
+		acceleration_speed,
+		speed_add
+	)
