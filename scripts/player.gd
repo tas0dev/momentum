@@ -18,8 +18,8 @@ extends CharacterBody3D
 # マウス感度
 @export var mouse_sensitivity: float = 0.002
 
-# 空中での加速度
-@export var air_acceleration: float = 12.0
+# ストレイフの感度
+@export var air_acceleration: float = 18.0
 
 # 空中での加速上限
 @export var air_speed_cap: float = 3.0
