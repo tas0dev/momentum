@@ -45,6 +45,9 @@ extends CharacterBody3D
 # しゃがみ中の移動速度
 @export var crouch_speed: float = 3
 
+# しゃがみ状態時の加速度
+@export var crouch_acceleration: float = 5.0
+
 # 着地前に押したジャンプ入力を保持する時間（秒）
 @export_range(0.0, 0.2, 0.005)
 
@@ -137,7 +140,8 @@ func handle_movement(
 				accelerate_ground(
 					direction,
 					delta,
-					crouch_speed
+					crouch_speed,
+					crouch_acceleration
 				)
 			
 				
@@ -153,18 +157,24 @@ func handle_movement(
 		apply_ground_friction(delta)
 
 		if direction != Vector3.ZERO:
-			accelerate_ground(direction, delta, move_speed)
+			accelerate_ground(
+				direction,
+				delta,
+				move_speed,
+				acceleration
+			)
 
 func accelerate_ground(
 	direction: Vector3,
 	delta: float,
-	target_speed: float
+	target_speed: float,
+	acceleration_rate: float
 ) -> void:
 	var current_speed := velocity.dot(direction)
 	var speed_to_add := target_speed - current_speed
 	
 	var acceleration_speed := (
-		acceleration
+		acceleration_rate
 		* target_speed
 		* delta
 	)
