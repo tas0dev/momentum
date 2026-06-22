@@ -24,6 +24,11 @@ extends CharacterBody3D
 # 空中での加速上限
 @export var air_speed_cap: float = 3.0
 
+# 着地前に押したジャンプ入力を保持する時間（秒）
+@export_range(0.0, 0.2, 0.005)
+var jump_buffer_time: float = 0.08
+var jump_buffer_timer: float = 0.0
+
 @onready var head: Node3D = $Head
 @onready var speed_label: Label = $HUD/SpeedLabel
 
@@ -57,6 +62,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	update_jump_buffer(delta)
+	var is_jumped_this_frame := handle_jump()
+	
 	apply_gravity(delta)
 	handle_jump()
 	handle_movement(delta)
@@ -68,11 +76,6 @@ func _physics_process(delta: float) -> void:
 func apply_gravity(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y -= gravity * delta
-
-
-func handle_jump() -> void:
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = jump_velocity
 
 func handle_movement(delta: float) -> void:
 	var input_vector := Input.get_vector(
@@ -91,6 +94,9 @@ func handle_movement(delta: float) -> void:
 	var direction := transform.basis * local_direction
 	direction.y = 0.0
 	direction = direction.normalized()
+	
+	if is_on_floor() and Input.is_action_pressed("jump"):
+		return
 	
 	if not is_on_floor():
 		accelerate_air(direction, delta)
@@ -121,6 +127,14 @@ func handle_movement(delta: float) -> void:
 			friction * delta
 		)
 
+func handle_jump() -> bool:
+	if jump_buffer_timer > 0.0 and is_on_floor():
+		velocity.y = jump_velocity
+		jump_buffer_timer = 0.0
+		return true
+	
+	return false
+
 func update_speed_label() -> void:
 	var speed := Vector2(
 		velocity.x,
@@ -149,3 +163,12 @@ func accelerate_air(
 		acceleration_speed,
 		speed_add
 	)
+
+func update_jump_buffer(delta: float) -> void:
+	if Input.is_action_just_pressed("jump"):
+		jump_buffer_timer = jump_buffer_time
+	else:
+		jump_buffer_timer = maxf(
+			jump_buffer_timer - delta,
+			0.0,
+		)
