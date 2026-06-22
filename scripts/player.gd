@@ -33,6 +33,15 @@ extends CharacterBody3D
 # スライドを終了する速度
 @export var slide_end_speed: float = 0.5
 
+# 立ってるときの視点高さ
+@export var stand_head_h: float = 0.65
+
+# スライド、しゃがみ中の視点高さ
+@export var slide_head_h: float = 0.25
+
+# 視点の高さが切り替わる速度
+@export var slide_camera_speed: float = 8.0
+
 # 着地前に押したジャンプ入力を保持する時間（秒）
 @export_range(0.0, 0.2, 0.005)
 
@@ -83,6 +92,7 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	update_speed_label()
+	update_slide_camera(delta)
 
 
 func apply_gravity(delta: float) -> void:
@@ -182,7 +192,14 @@ func update_speed_label() -> void:
 		velocity.z
 	).length()
 	
-	speed_label.text = "SPEED %.1f" % speed
+	var movement_state = ""
+	
+	if is_sliding:
+		movement_state = "    SLIDE"
+	else:
+		movement_state = "    RUN"
+	
+	speed_label.text = "SPEED %.1f%s" % [speed, movement_state]
 	
 func accelerate_air(
 	wish_direction: Vector3,
@@ -224,16 +241,16 @@ func update_slide_state() -> void:
 	).length()
 
 	if (
-		Input.is_action_just_pressed("slide")
+		Input.is_action_pressed("slide")
 		and is_on_floor()
 		and horizon_speed >= slide_min_speed
 	):
 		is_sliding = true
-	
+
 	if (
-		Input.is_action_just_pressed("slide")
-		and is_on_floor()
-		and horizon_speed >= slide_min_speed
+		not Input.is_action_pressed("slide")
+		or not is_on_floor()
+		or horizon_speed <= slide_end_speed
 	):
 		is_sliding = false
 
@@ -259,3 +276,15 @@ func apply_slide_friction(delta: float) -> void:
 	
 	velocity.x *= speed_scale
 	velocity.z *= speed_scale
+
+func update_slide_camera(delta: float) -> void:
+	var target_height := stand_head_h
+	
+	if is_sliding:
+		target_height = slide_head_h
+		
+	head.position.y = move_toward(
+		head.position.y,
+		target_height,
+		slide_camera_speed * delta
+	)
