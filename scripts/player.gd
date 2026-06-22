@@ -8,7 +8,7 @@ extends CharacterBody3D
 @export var mouse_sensitivity: float = 0.002
 
 @onready var head: Node3D = $Head
-
+@onready var speed_label: Label = $HUD/SpeedLabel
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -45,6 +45,7 @@ func _physics_process(delta: float) -> void:
 	handle_movement(delta)
 
 	move_and_slide()
+	update_speed_label()
 
 
 func apply_gravity(delta: float) -> void:
@@ -55,7 +56,6 @@ func apply_gravity(delta: float) -> void:
 func handle_jump() -> void:
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = jump_velocity
-
 
 func handle_movement(delta: float) -> void:
 	var input_vector := Input.get_vector(
@@ -99,3 +99,11 @@ func handle_movement(delta: float) -> void:
 			0.0,
 			friction * delta
 		)
+
+func update_speed_label() -> void:
+	var speed := Vector2(
+		velocity.x,
+		velocity.z
+	).length()
+	
+	speed_label.text = "SPEED %.1f" % speed

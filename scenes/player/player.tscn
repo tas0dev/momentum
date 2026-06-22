@@ -17,3 +17,10 @@ current = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1099980186]
 shape = SubResource("CapsuleShape3D_1yldb")
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1320871449]
+
+[node name="SpeedLabel" type="Label" parent="HUD" unique_id=272011968]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "SPEED: 0.0"
