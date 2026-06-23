@@ -21,6 +21,11 @@ config/icon="res://icon.svg"
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[editor]
+
+movie_writer/movie_file="/home/jine/Videos/momentum.avi"
+movie_writer/disable_vsync=true
+
 [input]
 
 move_forward={
