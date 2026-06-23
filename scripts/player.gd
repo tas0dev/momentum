@@ -456,16 +456,32 @@ func perform_wall_kick(wall_normal: Vector3) -> void:
 		velocity.z
 	)
 
-	var horizontal_speed := horizontal_velocity.length()
+	var horizontal_speed: float = horizontal_velocity.length()
 
-	var kicked_velocity := horizontal_velocity
+	# 壁に沿って進む速度
+	var tangent_velocity: Vector3 = horizontal_velocity.slide(
+		away_from_wall
+	)
 
-	kicked_velocity += away_from_wall * wall_kick_speed
+	# 壁から離れる成分
+	var outward_speed: float = maxf(
+		wall_kick_speed,
+		-horizontal_velocity.dot(away_from_wall)
+	)
 
-	if kicked_velocity.length() < wall_kick_min_horizontal_speed:
-		kicked_velocity = kicked_velocity.normalized() * wall_kick_min_horizontal_speed
+	var kicked_velocity: Vector3 = (
+		tangent_velocity
+		+ away_from_wall * outward_speed
+	)
 
-	kicked_velocity *= wall_kick_speed_boost
+	# 壁蹴り前の速度を最低限維持する
+	var target_speed: float = maxf(
+		horizontal_speed * wall_kick_speed_boost,
+		wall_kick_min_horizontal_speed
+	)
+
+	if kicked_velocity.length() < target_speed:
+		kicked_velocity = kicked_velocity.normalized() * target_speed
 
 	velocity.x = kicked_velocity.x
 	velocity.z = kicked_velocity.z
