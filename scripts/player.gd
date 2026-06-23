@@ -60,6 +60,12 @@ extends CharacterBody3D
 # 壁蹴りの上方向への速度
 @export var wall_kick_vertical_speed: float = 6.0
 
+# 壁蹴りで最低限保証する水平速度
+@export var wall_kick_min_horizontal_speed: float = 9.0
+
+# 壁蹴り時に現在速度へ追加する倍率
+@export var wall_kick_speed_boost: float = 1.08
+
 # 着地前に押したジャンプ入力を保持する時間（秒）
 @export_range(0.0, 0.2, 0.005)
 var jump_buffer_time: float = 0.08
@@ -253,10 +259,6 @@ func handle_jump() -> bool:
 
 	var can_kick_wall := (
 		wall_normal != Vector3.ZERO
-		and (
-			not is_on_floor()
-			or is_sliding
-		)
 		and is_different_wall(wall_normal)
 	)
 
@@ -454,14 +456,16 @@ func perform_wall_kick(wall_normal: Vector3) -> void:
 		velocity.z
 	)
 
-	var tangent_velocity := horizontal_velocity.slide(
-		away_from_wall
-	)
+	var horizontal_speed := horizontal_velocity.length()
 
-	var kicked_velocity := (
-		tangent_velocity
-		+ away_from_wall * wall_kick_speed
-	)
+	var kicked_velocity := horizontal_velocity
+
+	kicked_velocity += away_from_wall * wall_kick_speed
+
+	if kicked_velocity.length() < wall_kick_min_horizontal_speed:
+		kicked_velocity = kicked_velocity.normalized() * wall_kick_min_horizontal_speed
+
+	kicked_velocity *= wall_kick_speed_boost
 
 	velocity.x = kicked_velocity.x
 	velocity.z = kicked_velocity.z
