@@ -48,6 +48,9 @@ extends CharacterBody3D
 # しゃがみ状態時の加速度
 @export var crouch_acceleration: float = 5.0
 
+# しゃがみ中の減速度
+@export var crouch_friction: float = 5.0
+
 # 着地前に押したジャンプ入力を保持する時間（秒）
 @export_range(0.0, 0.2, 0.005)
 
@@ -57,6 +60,9 @@ var is_sliding: bool = false
 var is_crouching: bool = false
 
 @onready var head: Node3D = $Head
+@onready var standing_collider: CollisionShape3D = $StandingCollider
+@onready var crouching_collider: CollisionShape3D = $CrouchingCollider
+@onready var ceiling_check: ShapeCast3D = $CeilingCheck
 @onready var speed_label: Label = $HUD/SpeedLabel
 
 func _ready() -> void:
@@ -92,10 +98,10 @@ func _physics_process(delta: float) -> void:
 	update_jump_buffer(delta)
 	
 	apply_gravity(delta)
-	handle_jump()
 	
 	var is_jumped_this_frame := handle_jump()
 	handle_movement(delta, is_jumped_this_frame)
+	update_collider_state()
 
 	move_and_slide()
 	update_speed_label()
@@ -134,7 +140,7 @@ func handle_movement(
 			return
 			
 		if is_crouching:
-			apply_ground_friction(delta)
+			apply_ground_friction(delta, crouch_friction)
 			
 			if direction != Vector3.ZERO:
 				accelerate_ground(
@@ -143,7 +149,7 @@ func handle_movement(
 					crouch_speed,
 					crouch_acceleration
 				)
-			
+			return
 				
 		if jumped_this_frame or not is_on_floor():
 			is_sliding = false
@@ -154,7 +160,7 @@ func handle_movement(
 			apply_slide_friction(delta)
 			return
 
-		apply_ground_friction(delta)
+		apply_ground_friction(delta, friction)
 
 		if direction != Vector3.ZERO:
 			accelerate_ground(
@@ -172,6 +178,9 @@ func accelerate_ground(
 ) -> void:
 	var current_speed := velocity.dot(direction)
 	var speed_to_add := target_speed - current_speed
+
+	if speed_to_add <= 0.0:
+		return
 	
 	var acceleration_speed := (
 		acceleration_rate
@@ -184,29 +193,32 @@ func accelerate_ground(
 		speed_to_add
 	)
 	
-func apply_ground_friction(delta: float) -> void:
-	var horizon_velocity := Vector3(
-		velocity.x,
-		0.0,
-		velocity.z
-	)
-	
-	var current_speed := horizon_velocity.length()
-	
-	if current_speed <= 0.001:
-		velocity.x = 0.0
-		velocity.z = 0.0
-		return
+func apply_ground_friction(
+		delta: float,
+		friction_rate: float
+	) -> void:
+		var horizon_velocity := Vector3(
+			velocity.x,
+			0.0,
+			velocity.z
+		)
 		
-	var new_speed := maxf(
-		current_speed - friction * delta,
-		0.0
-	)
+		var current_speed := horizon_velocity.length()
 		
-	var speed_scale := new_speed / current_speed
-	
-	velocity.x *= speed_scale
-	velocity.z *= speed_scale
+		if current_speed <= 0.001:
+			velocity.x = 0.0
+			velocity.z = 0.0
+			return
+			
+		var new_speed := maxf(
+			current_speed - friction_rate * delta,
+			0.0
+		)
+			
+		var speed_scale := new_speed / current_speed
+		
+		velocity.x *= speed_scale
+		velocity.z *= speed_scale
 
 func handle_jump() -> bool:
 	if jump_buffer_timer > 0.0 and is_on_floor():
@@ -231,8 +243,15 @@ func update_speed_label() -> void:
 	else:
 		movement_state = "    RUN"
 		
+	var can_standing = ""
 	
-	speed_label.text = "SPEED %.1f%s" % [speed, movement_state]
+	if can_stand_up():
+		can_standing = "    CAN STAND"
+	else:
+		can_standing = "    CAN'T STAND"
+		
+	
+	speed_label.text = "SPEED %.1f%s%s" % [speed, movement_state, can_standing]
 	
 func accelerate_air(
 	wish_direction: Vector3,
@@ -276,7 +295,11 @@ func update_slide_state() -> void:
 	# キーを離したら立つ
 	if not Input.is_action_pressed("slide"):
 		is_sliding = false
-		is_crouching = false
+
+		if can_stand_up():
+			is_crouching = false
+		else:
+			is_crouching = true
 		return
 
 	# キーを押した瞬間だけスライド開始を判定する
@@ -290,7 +313,6 @@ func update_slide_state() -> void:
 		else:
 			is_sliding = false
 			is_crouching = true
-
 		return
 
 	# スライド中に減速したらしゃがみに移行する
@@ -341,4 +363,21 @@ func update_slide_camera(delta: float) -> void:
 		head.position.y,
 		target_height,
 		slide_camera_speed * delta
+	)
+
+func can_stand_up() -> bool:
+	ceiling_check.force_shapecast_update()
+	return not ceiling_check.is_colliding()
+
+func update_collider_state() -> void:
+	var should_crouch := is_sliding or is_crouching
+
+	standing_collider.set_deferred(
+		"disabled",
+		should_crouch
+	)
+
+	crouching_collider.set_deferred(
+		"disabled",
+		not should_crouch
 	)

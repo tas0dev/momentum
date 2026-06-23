@@ -6,6 +6,14 @@
 radius = 0.4
 height = 1.8
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_o5qli"]
+radius = 0.4
+height = 0.8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qg6d2"]
+radius = 0.4
+height = 1.0
+
 [node name="Player" type="CharacterBody3D" unique_id=256163389]
 script = ExtResource("1_8afob")
 
@@ -15,7 +23,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
 [node name="Camera3D" type="Camera3D" parent="Head" unique_id=1249842018]
 current = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1099980186]
+[node name="StandingCollider" type="CollisionShape3D" parent="." unique_id=1099980186]
 shape = SubResource("CapsuleShape3D_1yldb")
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1320871449]
@@ -24,3 +32,12 @@ shape = SubResource("CapsuleShape3D_1yldb")
 offset_right = 40.0
 offset_bottom = 23.0
 text = "SPEED: 0.0"
+
+[node name="CeilingCheck" type="ShapeCast3D" parent="." unique_id=1494424977]
+shape = SubResource("CapsuleShape3D_o5qli")
+target_position = Vector3(0, 0.5, 0)
+
+[node name="CrouchingCollider" type="CollisionShape3D" parent="." unique_id=351748543]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
+shape = SubResource("CapsuleShape3D_qg6d2")
+disabled = true
