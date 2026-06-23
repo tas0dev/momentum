@@ -5,6 +5,8 @@
 [ext_resource type="Material" uid="uid://by5encxbbc8ur" path="res://materials/prototype_textures/materials/blue_material.tres" id="3_jyhfs"]
 [ext_resource type="Material" uid="uid://cxei1ugbnqkws" path="res://materials/prototype_textures/materials/black_material.tres" id="4_jyhfs"]
 [ext_resource type="Material" uid="uid://bhxov55o4cgfs" path="res://materials/prototype_textures/materials/orange_material.tres" id="4_tbgi4"]
+[ext_resource type="PackedScene" uid="uid://bg2b7d1ytb3ey" path="res://scenes/props/tereporter.tscn" id="7_o6xl0"]
+[ext_resource type="PackedScene" uid="uid://dpkcc6px5fxnp" path="res://scenes/props/tereporter_exit.tscn" id="8_tipki"]
 
 [node name="Main" type="Node3D" unique_id=1141400618]
 
@@ -52,6 +54,16 @@ size = Vector3(5, 1, 10)
 transform = Transform3D(-1, -7.5710346e-08, -4.3711385e-08, 0, 0.5, -0.8660254, 8.742278e-08, -0.8660254, -0.5, 0, -4.1, -7.076)
 size = Vector3(5, 1, 10)
 
+[node name="Tereporter" parent="PlayGround" unique_id=1842991945 node_paths=PackedStringArray("destination") instance=ExtResource("7_o6xl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -10)
+destination = NodePath("../../TereporterExit")
+
+[node name="Ramp2" type="CSGBox3D" parent="PlayGround" unique_id=362787376]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, -0.5, 0, 0.5, 0.8660254, 40, 7, 20)
+material_override = ExtResource("4_tbgi4")
+use_collision = true
+size = Vector3(10, 1, 30)
+
 [node name="TestArena" type="Node3D" parent="." unique_id=1932419039]
 
 [node name="Floor" type="CSGBox3D" parent="TestArena" unique_id=743796891]
@@ -94,3 +106,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 material_override = ExtResource("3_jyhfs")
 use_collision = true
 size = Vector3(1, 5, 10)
+
+[node name="TereporterExit" parent="." unique_id=670940120 instance=ExtResource("8_tipki")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 40, 15, 8)

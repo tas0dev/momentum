@@ -81,6 +81,12 @@ extends CharacterBody3D
 # 着地した視点が元へ戻る速度
 @export var landing_kick_recovery: float = 8.0
 
+# 坂をスライドするときの加速力
+@export var slide_slope_acceleration: float = 20.0
+
+# 坂によるスライド加速の上限速度
+@export var slide_max_speed: float = 30.0
+
 # 着地前に押したジャンプ入力を保持する時間（秒）
 @export_range(0.0, 0.2, 0.005)
 var jump_buffer_time: float = 0.08
@@ -200,8 +206,9 @@ func handle_movement(
 			is_sliding = false
 			accelerate_air(direction, delta)
 			return
-		
+			
 		if is_sliding:
+			apply_slide_slope_acceleration(delta)
 			apply_slide_friction(delta)
 			return
 			
@@ -230,6 +237,41 @@ func handle_movement(
 				move_speed,
 				acceleration
 			)
+
+func apply_slide_slope_acceleration(delta: float) -> void:
+	if not is_on_floor():
+		return
+
+	var floor_normal: Vector3 = get_floor_normal()
+
+	# 重力方向を床面へ投影し、坂の下方向を取得する
+	var downhill_direction: Vector3 = Vector3.DOWN.slide(
+		floor_normal
+	)
+
+	var slope_strength: float = downhill_direction.length()
+
+	# 平地では加速しない
+	if slope_strength <= 0.001:
+		return
+
+	var horizontal_speed: float = Vector2(
+		velocity.x,
+		velocity.z
+	).length()
+
+	# すでに上限以上なら、それ以上は加速しない
+	if horizontal_speed >= slide_max_speed:
+		return
+
+	downhill_direction = downhill_direction.normalized()
+
+	velocity += (
+		downhill_direction
+		* slide_slope_acceleration
+		* slope_strength
+		* delta
+	)
 
 func accelerate_ground(
 	direction: Vector3,
