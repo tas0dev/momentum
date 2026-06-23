@@ -59,9 +59,14 @@ extends CharacterBody3D
 
 # 着地前に押したジャンプ入力を保持する時間（秒）
 @export_range(0.0, 0.2, 0.005)
-
 var jump_buffer_time: float = 0.08
 var jump_buffer_timer: float = 0.0
+
+# 同じ壁として扱う法線の類似度
+@export_range(-1.0, 1.0, 0.05)
+var same_wall_dot_threshold: float = 0.8
+var last_wall_normal: Vector3 = Vector3.ZERO
+
 var is_sliding: bool = false
 var is_crouching: bool = false
 var can_wall_kick: bool = true
@@ -142,6 +147,11 @@ func handle_movement(
 
 		update_slide_state()
 		
+		if jumped_this_frame or not is_on_floor():
+			is_sliding = false
+			accelerate_air(direction, delta)
+			return
+		
 		if is_sliding:
 			apply_slide_friction(delta)
 			return
@@ -156,11 +166,6 @@ func handle_movement(
 					crouch_speed,
 					crouch_acceleration
 				)
-			return
-				
-		if jumped_this_frame or not is_on_floor():
-			is_sliding = false
-			accelerate_air(direction, delta)
 			return
 
 		if is_sliding:
@@ -229,49 +234,32 @@ func apply_ground_friction(
 
 func handle_jump() -> bool:
 	if is_on_floor():
-		can_wall_kick = true
+		last_wall_normal = Vector3.ZERO
 
-		if jump_buffer_timer > 0.0:
-			velocity.y = jump_velocity
-			jump_buffer_timer = 0.0
-			return true
-
-		return false
-
-	if jump_buffer_timer <= 0.0 or not can_wall_kick:
+	if jump_buffer_timer <= 0.0:
 		return false
 
 	var wall_normal := find_wall_normal()
 
-	if wall_normal == Vector3.ZERO:
-		return false
-
-	var away_from_wall := Vector3(
-		wall_normal.x,
-		0.0,
-		wall_normal.z
-	).normalized()
-
-	var horizontal_velocity := Vector3(
-		velocity.x,
-		0.0,
-		velocity.z
+	var can_kick_wall := (
+		wall_normal != Vector3.ZERO
+		and (
+			not is_on_floor()
+			or is_sliding
+		)
+		and is_different_wall(wall_normal)
 	)
 
-	var tangent_velocity := horizontal_velocity.slide(away_from_wall)
-	var kicked_velocity := (
-		tangent_velocity
-		+ away_from_wall * wall_kick_speed
-	)
+	if can_kick_wall:
+		perform_wall_kick(wall_normal)
+		return true
 
-	velocity.x = kicked_velocity.x
-	velocity.z = kicked_velocity.z
-	velocity.y = wall_kick_vertical_speed
+	if is_on_floor():
+		velocity.y = jump_velocity
+		jump_buffer_timer = 0.0
+		return true
 
-	jump_buffer_timer = 0.0
-	can_wall_kick = false
-
-	return true
+	return false
 
 func update_speed_label() -> void:
 	var speed := Vector2(
@@ -436,3 +424,39 @@ func find_wall_normal() -> Vector3:
 			return normal.normalized()
 
 	return Vector3.ZERO
+
+func is_different_wall(wall_normal: Vector3) -> bool:
+	if last_wall_normal == Vector3.ZERO:
+		return true
+
+	return wall_normal.dot(last_wall_normal) < same_wall_dot_threshold
+
+func perform_wall_kick(wall_normal: Vector3) -> void:
+	var away_from_wall := Vector3(
+		wall_normal.x,
+		0.0,
+		wall_normal.z
+	).normalized()
+
+	var horizontal_velocity := Vector3(
+		velocity.x,
+		0.0,
+		velocity.z
+	)
+
+	var tangent_velocity := horizontal_velocity.slide(
+		away_from_wall
+	)
+
+	var kicked_velocity := (
+		tangent_velocity
+		+ away_from_wall * wall_kick_speed
+	)
+
+	velocity.x = kicked_velocity.x
+	velocity.z = kicked_velocity.z
+	velocity.y = wall_kick_vertical_speed
+
+	last_wall_normal = wall_normal
+	jump_buffer_timer = 0.0
+	is_sliding = false
