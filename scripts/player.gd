@@ -24,6 +24,9 @@ extends CharacterBody3D
 # 空中での加速上限
 @export var air_speed_cap: float = 3.0
 
+# 空中加速量を計算するときの基準速度
+@export var air_wish_speed: float = 7.0
+
 # スライドを開始できる最低速度
 @export var slide_min_speed: float = 6
 
@@ -308,7 +311,7 @@ func accelerate_air(
 	
 	var acceleration_speed := (
 		air_acceleration
-		* air_speed_cap
+		* air_wish_speed
 		* delta
 	)
 	

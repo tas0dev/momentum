@@ -3,21 +3,22 @@
 [ext_resource type="PackedScene" uid="uid://df522tsmkg3dg" path="res://scenes/player/player.tscn" id="1_o5qli"]
 [ext_resource type="Material" uid="uid://bdd0l6ls5empc" path="res://materials/prototype_textures/materials/grey_material.tres" id="1_sugp2"]
 [ext_resource type="Material" uid="uid://by5encxbbc8ur" path="res://materials/prototype_textures/materials/blue_material.tres" id="3_jyhfs"]
+[ext_resource type="Material" uid="uid://cxei1ugbnqkws" path="res://materials/prototype_textures/materials/black_material.tres" id="4_jyhfs"]
 
 [node name="Main" type="Node3D" unique_id=1141400618]
 
 [node name="Floor" type="CSGBox3D" parent="." unique_id=967190566]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, -0.5, 0)
 material_override = ExtResource("1_sugp2")
 use_collision = true
-size = Vector3(100, 1, 100)
+size = Vector3(50, 1, 100)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1256063636]
 transform = Transform3D(1, 0, 0, 0, 0.64278764, 0.76604444, 0, -0.76604444, 0.64278764, 0, 6.0627584, 16.532475)
 shadow_enabled = true
 
 [node name="Player" parent="." unique_id=1411576541 instance=ExtResource("1_o5qli")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1, 0)
 
 [node name="PlayGround" type="Node3D" parent="." unique_id=647195204]
 
@@ -39,3 +40,25 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.5, 0)
 material_override = ExtResource("3_jyhfs")
 use_collision = true
 size = Vector3(1, 5, 10)
+
+[node name="TestArena" type="Node3D" parent="." unique_id=1932419039]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="TestArena" unique_id=743796891]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, -0.5, 0)
+material_override = ExtResource("4_jyhfs")
+use_collision = true
+size = Vector3(40, 1, 15)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="TestArena" unique_id=1433799120]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, -0.5, 5)
+material_override = ExtResource("4_jyhfs")
+use_collision = true
+size = Vector3(5, 1, 5)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="TestArena/CSGBox3D2" unique_id=260602921]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.096619, -0.5, -11.881741)
+size = Vector3(5, 1, 5)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="TestArena/CSGBox3D2/CSGBox3D2" unique_id=710254757]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.235893, -0.5, 10.530376)
+size = Vector3(5, 1, 5)
