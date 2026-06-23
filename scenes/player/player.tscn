@@ -20,7 +20,9 @@ script = ExtResource("1_8afob")
 [node name="Head" type="Node3D" parent="." unique_id=185250802]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
 
-[node name="Camera3D" type="Camera3D" parent="Head" unique_id=1249842018]
+[node name="CameraKick" type="Node3D" parent="Head" unique_id=92304712]
+
+[node name="Camera3D" type="Camera3D" parent="Head/CameraKick" unique_id=1249842018]
 current = true
 
 [node name="StandingCollider" type="CollisionShape3D" parent="." unique_id=1099980186]

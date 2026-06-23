@@ -66,6 +66,21 @@ extends CharacterBody3D
 # 壁蹴り時に現在速度へ追加する倍率
 @export var wall_kick_speed_boost: float = 1.08
 
+# 着地時に視点が下へ傾く最大角度
+@export var landing_kick_angle: float = 8.0
+
+# 着地時に視点が沈む最大距離
+@export var landing_kick_drop: float = 0.25
+
+# 着地演出が発生する最低落下速度
+@export var landing_kick_min_speed: float = 6.0
+
+# 最大の着地演出になる落下速度
+@export var landing_kick_max_speed: float = 12.0
+
+# 着地した視点が元へ戻る速度
+@export var landing_kick_recovery: float = 8.0
+
 # 着地前に押したジャンプ入力を保持する時間（秒）
 @export_range(0.0, 0.2, 0.005)
 var jump_buffer_time: float = 0.08
@@ -81,17 +96,25 @@ var is_crouching: bool = false
 var can_wall_kick: bool = true
 var spawn_position: Vector3
 var spawn_rotation: Vector3
+var was_on_floor: bool = false
+var landing_kick_amount: float = 0.0
 
 @onready var head: Node3D = $Head
 @onready var standing_collider: CollisionShape3D = $StandingCollider
 @onready var crouching_collider: CollisionShape3D = $CrouchingCollider
 @onready var ceiling_check: ShapeCast3D = $CeilingCheck
 @onready var speed_label: Label = $HUD/SpeedLabel
+@onready var camera_kick: Node3D = $Head/CameraKick
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	spawn_position = global_position
 	spawn_rotation = global_rotation
+	
+	floor_stop_on_slope = false
+	floor_snap_length = 0.2
+	floor_max_angle = deg_to_rad(50.0)
+	up_direction = Vector3.UP
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -122,16 +145,26 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("restart"):
 		restart_player()
-	
+
 	update_jump_buffer(delta)
-	
 	apply_gravity(delta)
-	
-	var is_jumped_this_frame := handle_jump()
-	handle_movement(delta, is_jumped_this_frame)
+
+	var was_grounded: bool = is_on_floor()
+	var landing_speed: float = maxf(-velocity.y, 0.0)
+
+	var jumped_this_frame := handle_jump()
+
+	handle_movement(delta, jumped_this_frame)
 	update_collider_state()
 
 	move_and_slide()
+
+	update_landing_kick(
+		delta,
+		was_grounded,
+		landing_speed
+	)
+
 	update_speed_label()
 	update_slide_camera(delta)
 
@@ -279,24 +312,9 @@ func update_speed_label() -> void:
 		velocity.z
 	).length()
 	
-	var movement_state = ""
+	var yspeed := velocity.y
 	
-	if is_sliding:
-		movement_state = "    SLIDE"
-	elif is_crouching:
-		movement_state = "    CROUCH"
-	else:
-		movement_state = "    RUN"
-		
-	var can_standing = ""
-	
-	if can_stand_up():
-		can_standing = "    CAN STAND"
-	else:
-		can_standing = "    CAN'T STAND"
-		
-	
-	speed_label.text = "SPEED %.1f%s%s" % [speed, movement_state, can_standing]
+	speed_label.text = "SPEED %.1f | %.1f" % [speed, yspeed]
 	
 func accelerate_air(
 	wish_direction: Vector3,
@@ -500,3 +518,40 @@ func restart_player():
 	is_crouching = false
 	last_wall_normal = Vector3.ZERO
 	jump_buffer_timer = 0.0
+
+func update_landing_kick(
+	delta: float,
+	was_grounded: bool,
+	landing_speed: float
+) -> void:
+	if (
+		not was_grounded
+		and is_on_floor()
+		and landing_speed >= landing_kick_min_speed
+	):
+		landing_kick_amount = clampf(
+			(
+				landing_speed
+				- landing_kick_min_speed
+			) / (
+				landing_kick_max_speed
+				- landing_kick_min_speed
+			),
+			0.0,
+			1.0
+		)
+
+	camera_kick.rotation.x = deg_to_rad(
+		landing_kick_angle * landing_kick_amount
+	)
+
+	camera_kick.position.y = (
+		-landing_kick_drop
+		* landing_kick_amount
+	)
+
+	landing_kick_amount = move_toward(
+		landing_kick_amount,
+		0.0,
+		landing_kick_recovery * delta
+	)
