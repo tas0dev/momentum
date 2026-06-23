@@ -51,6 +51,12 @@ extends CharacterBody3D
 # しゃがみ中の減速度
 @export var crouch_friction: float = 5.0
 
+# 壁蹴りの強度
+@export var wall_kick_speed: float = 7.0
+
+# 壁蹴りの上方向への速度
+@export var wall_kick_vertical_speed: float = 6.0
+
 # 着地前に押したジャンプ入力を保持する時間（秒）
 @export_range(0.0, 0.2, 0.005)
 
@@ -58,6 +64,7 @@ var jump_buffer_time: float = 0.08
 var jump_buffer_timer: float = 0.0
 var is_sliding: bool = false
 var is_crouching: bool = false
+var can_wall_kick: bool = true
 
 @onready var head: Node3D = $Head
 @onready var standing_collider: CollisionShape3D = $StandingCollider
@@ -221,12 +228,50 @@ func apply_ground_friction(
 		velocity.z *= speed_scale
 
 func handle_jump() -> bool:
-	if jump_buffer_timer > 0.0 and is_on_floor():
-		velocity.y = jump_velocity
-		jump_buffer_timer = 0.0
-		return true
-	
-	return false
+	if is_on_floor():
+		can_wall_kick = true
+
+		if jump_buffer_timer > 0.0:
+			velocity.y = jump_velocity
+			jump_buffer_timer = 0.0
+			return true
+
+		return false
+
+	if jump_buffer_timer <= 0.0 or not can_wall_kick:
+		return false
+
+	var wall_normal := find_wall_normal()
+
+	if wall_normal == Vector3.ZERO:
+		return false
+
+	var away_from_wall := Vector3(
+		wall_normal.x,
+		0.0,
+		wall_normal.z
+	).normalized()
+
+	var horizontal_velocity := Vector3(
+		velocity.x,
+		0.0,
+		velocity.z
+	)
+
+	var tangent_velocity := horizontal_velocity.slide(away_from_wall)
+	var kicked_velocity := (
+		tangent_velocity
+		+ away_from_wall * wall_kick_speed
+	)
+
+	velocity.x = kicked_velocity.x
+	velocity.z = kicked_velocity.z
+	velocity.y = wall_kick_vertical_speed
+
+	jump_buffer_timer = 0.0
+	can_wall_kick = false
+
+	return true
 
 func update_speed_label() -> void:
 	var speed := Vector2(
@@ -381,3 +426,13 @@ func update_collider_state() -> void:
 		"disabled",
 		not should_crouch
 	)
+
+func find_wall_normal() -> Vector3:
+	for index in range(get_slide_collision_count()):
+		var collision: KinematicCollision3D = get_slide_collision(index)
+		var normal: Vector3 = collision.get_normal()
+
+		if absf(normal.y) < 0.7:
+			return normal.normalized()
+
+	return Vector3.ZERO
