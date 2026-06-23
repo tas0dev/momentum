@@ -70,6 +70,8 @@ var last_wall_normal: Vector3 = Vector3.ZERO
 var is_sliding: bool = false
 var is_crouching: bool = false
 var can_wall_kick: bool = true
+var spawn_position: Vector3
+var spawn_rotation: Vector3
 
 @onready var head: Node3D = $Head
 @onready var standing_collider: CollisionShape3D = $StandingCollider
@@ -79,6 +81,8 @@ var can_wall_kick: bool = true
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	spawn_position = global_position
+	spawn_rotation = global_rotation
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -107,6 +111,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if Input.is_action_just_pressed("restart"):
+		restart_player()
+	
 	update_jump_buffer(delta)
 	
 	apply_gravity(delta)
@@ -460,3 +467,13 @@ func perform_wall_kick(wall_normal: Vector3) -> void:
 	last_wall_normal = wall_normal
 	jump_buffer_timer = 0.0
 	is_sliding = false
+
+func restart_player():
+	global_position = spawn_position
+	global_rotation = spawn_rotation
+	velocity = Vector3.ZERO
+	
+	is_sliding = false
+	is_crouching = false
+	last_wall_normal = Vector3.ZERO
+	jump_buffer_timer = 0.0
