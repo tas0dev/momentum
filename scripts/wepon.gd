@@ -49,8 +49,17 @@ class_name Weapon
 # 射撃停止後に中央へ戻る速さ
 @export var camera_recoil_recovery_speed: float = 9.0
 
+# 銃口の発光
+@export var muzzle_flash: MeshInstance3D
+
 # プレイヤーのCameraRecoilノード
 @export var camera_recoil_node: Node3D
+
+# 発光を表示する時間
+@export var muzzle_flash_time: float = 0.04
+
+# 発砲音
+@export var fire_sound: AudioStreamPlayer3D
 
 # 1秒あたりの発射数
 @export_range(0.1, 30.0, 0.1)
@@ -61,9 +70,16 @@ var rest_rotation: Vector3
 var fire_cooldown: float = 0.0
 var camera_recoil_target: Vector2 = Vector2.ZERO
 var camera_recoil_current: Vector2 = Vector2.ZERO
-
+var muzzle_flash_timer: float = 0.0
 
 func _ready() -> void:
+	if muzzle_flash != null:
+		muzzle_flash.visible = false
+	
+	if muzzle_flash != null:
+		muzzle_flash.visible = false
+		print("MuzzleFlash: ", muzzle_flash.get_path())
+	
 	rest_position = position
 	rest_rotation = rotation
 	
@@ -88,12 +104,21 @@ func _physics_process(delta: float) -> void:
 		fire_cooldown - delta,
 		0.0
 	)
+		
+	if (
+		muzzle_flash != null
+		and muzzle_flash_timer > 0.0
+	):
+		muzzle_flash_timer -= delta
 
+		if muzzle_flash_timer <= 0.0:
+			muzzle_flash.visible = false
+	
 	if not is_active:
 		return
-
+	
 	var wants_to_fire: bool
-
+	
 	if automatic:
 		wants_to_fire = Input.is_action_pressed("fire")
 	else:
@@ -109,6 +134,7 @@ func _physics_process(delta: float) -> void:
 func fire() -> void:
 	apply_recoil()
 	apply_camera_recoil()
+	play_fire_effects()
 	
 	if shoot_ray == null:
 		return
@@ -232,3 +258,25 @@ func apply_camera_recoil() -> void:
 		-camera_recoil_max_yaw,
 		camera_recoil_max_yaw
 	)
+
+func play_fire_effects() -> void:
+	if muzzle_flash == null:
+		push_error(
+			"マズルフラッシュが設定されていません: %s"
+			% weapon_name
+		)
+		return
+
+	muzzle_flash.visible = true
+	muzzle_flash.rotation.z = randf_range(
+		0.0,
+		TAU
+	)
+	muzzle_flash_timer = muzzle_flash_time
+
+	if fire_sound != null:
+		fire_sound.pitch_scale = randf_range(
+			0.97,
+			1.03
+		)
+		fire_sound.play()
