@@ -6,6 +6,7 @@
 [ext_resource type="Material" uid="uid://cxei1ugbnqkws" path="res://materials/prototype_textures/materials/black_material.tres" id="4_jyhfs"]
 [ext_resource type="Material" uid="uid://bhxov55o4cgfs" path="res://materials/prototype_textures/materials/orange_material.tres" id="4_tbgi4"]
 [ext_resource type="PackedScene" uid="uid://bg2b7d1ytb3ey" path="res://scenes/props/tereporter.tscn" id="7_o6xl0"]
+[ext_resource type="PackedScene" uid="uid://cibt0w40enr7n" path="res://scenes/wepons/m4a1.tscn" id="8_85g3d"]
 [ext_resource type="PackedScene" uid="uid://dpkcc6px5fxnp" path="res://scenes/props/tereporter_exit.tscn" id="8_tipki"]
 
 [node name="Main" type="Node3D" unique_id=1141400618]
@@ -109,3 +110,6 @@ size = Vector3(1, 5, 10)
 
 [node name="TereporterExit" parent="." unique_id=670940120 instance=ExtResource("8_tipki")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 40, 15, 8)
+
+[node name="M4A1" parent="." unique_id=945268203 instance=ExtResource("8_85g3d")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 7.684699, 0.26741368, 2.4681978)
