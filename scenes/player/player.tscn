@@ -3,18 +3,8 @@
 [ext_resource type="Script" uid="uid://ddqx155cqm1a" path="res://scripts/player.gd" id="1_8afob"]
 [ext_resource type="PackedScene" uid="uid://cibt0w40enr7n" path="res://scenes/wepons/m4a1.tscn" id="2_dovo2"]
 [ext_resource type="Script" uid="uid://bmqgdnnsxhntw" path="res://scripts/wepon.gd" id="2_gmlin"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1yldb"]
-transparency = 1
-shading_mode = 0
-albedo_color = Color(1, 1, 0.3254902, 0.6431373)
-billboard_mode = 3
-billboard_keep_scale = true
-particles_anim_h_frames = 1
-particles_anim_v_frames = 1
-particles_anim_loop = false
-
-[sub_resource type="QuadMesh" id="QuadMesh_qg6d2"]
+[ext_resource type="AudioStream" uid="uid://dnrgmx3hyw2ss" path="res://audios/fire2.mp3" id="4_lvxji"]
+[ext_resource type="PackedScene" uid="uid://cy5gj0qdc77u2" path="res://assets/BinbunVFX/muzzle_flash/effects/muzzle_flash/muzzle_flash_06.tscn" id="4_p47bc"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1yldb"]
 radius = 0.4
@@ -45,7 +35,7 @@ fov = 110.0
 [node name="WeponHolder" type="Node3D" parent="Head/CameraKick/CameraRecoil/Camera3D" unique_id=348069041]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, -0.22, -0.4)
 
-[node name="M4A1" type="Node3D" parent="Head/CameraKick/CameraRecoil/Camera3D/WeponHolder" unique_id=1791565634 node_paths=PackedStringArray("shoot_ray", "muzzle_flash", "camera_recoil_node")]
+[node name="M4A1" type="Node3D" parent="Head/CameraKick/CameraRecoil/Camera3D/WeponHolder" unique_id=1791565634 node_paths=PackedStringArray("shoot_ray", "muzzle_flash", "camera_recoil_node", "fire_sound")]
 script = ExtResource("2_gmlin")
 weapon_name = "M4A1"
 shoot_ray = NodePath("../../ShootRay")
@@ -53,21 +43,23 @@ camera_recoil_pitch = -5.0
 camera_recoil_yaw = -5.0
 camera_recoil_max_pitch = -10.0
 camera_recoil_max_yaw = 3.0
-muzzle_flash = NodePath("Muzzle/MuzzleFlash")
+muzzle_flash = NodePath("Muzzle/MuzzleFlashVFX")
 camera_recoil_node = NodePath("../../..")
+fire_sound = NodePath("FireSound")
 
 [node name="Model" parent="Head/CameraKick/CameraRecoil/Camera3D/WeponHolder/M4A1" unique_id=945268203 instance=ExtResource("2_dovo2")]
 
 [node name="Muzzle" type="Marker3D" parent="Head/CameraKick/CameraRecoil/Camera3D/WeponHolder/M4A1" unique_id=1126320622]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, -0.75)
 
-[node name="MuzzleFlash" type="MeshInstance3D" parent="Head/CameraKick/CameraRecoil/Camera3D/WeponHolder/M4A1/Muzzle" unique_id=1981036350]
-transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 0, 0)
-visible = false
-material_override = SubResource("StandardMaterial3D_1yldb")
-mesh = SubResource("QuadMesh_qg6d2")
+[node name="MuzzleFlashVFX" parent="Head/CameraKick/CameraRecoil/Camera3D/WeponHolder/M4A1/Muzzle" unique_id=1629914272 instance=ExtResource("4_p47bc")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+preview = false
+one_shot = true
+autoplay = false
 
 [node name="FireSound" type="AudioStreamPlayer3D" parent="Head/CameraKick/CameraRecoil/Camera3D/WeponHolder/M4A1" unique_id=1054981071]
+stream = ExtResource("4_lvxji")
 
 [node name="ShootRay" type="RayCast3D" parent="Head/CameraKick/CameraRecoil/Camera3D" unique_id=1467677024]
 target_position = Vector3(0, -1, -200)

@@ -50,13 +50,10 @@ class_name Weapon
 @export var camera_recoil_recovery_speed: float = 9.0
 
 # 銃口の発光
-@export var muzzle_flash: MeshInstance3D
+@export var muzzle_flash: Node3D
 
 # プレイヤーのCameraRecoilノード
 @export var camera_recoil_node: Node3D
-
-# 発光を表示する時間
-@export var muzzle_flash_time: float = 0.04
 
 # 発砲音
 @export var fire_sound: AudioStreamPlayer3D
@@ -70,15 +67,10 @@ var rest_rotation: Vector3
 var fire_cooldown: float = 0.0
 var camera_recoil_target: Vector2 = Vector2.ZERO
 var camera_recoil_current: Vector2 = Vector2.ZERO
-var muzzle_flash_timer: float = 0.0
 
 func _ready() -> void:
 	if muzzle_flash != null:
 		muzzle_flash.visible = false
-	
-	if muzzle_flash != null:
-		muzzle_flash.visible = false
-		print("MuzzleFlash: ", muzzle_flash.get_path())
 	
 	rest_position = position
 	rest_rotation = rotation
@@ -104,15 +96,6 @@ func _physics_process(delta: float) -> void:
 		fire_cooldown - delta,
 		0.0
 	)
-		
-	if (
-		muzzle_flash != null
-		and muzzle_flash_timer > 0.0
-	):
-		muzzle_flash_timer -= delta
-
-		if muzzle_flash_timer <= 0.0:
-			muzzle_flash.visible = false
 	
 	if not is_active:
 		return
@@ -268,11 +251,14 @@ func play_fire_effects() -> void:
 		return
 
 	muzzle_flash.visible = true
-	muzzle_flash.rotation.z = randf_range(
-		0.0,
-		TAU
-	)
-	muzzle_flash_timer = muzzle_flash_time
+
+	if muzzle_flash.has_method("play"):
+		muzzle_flash.call("play")
+	else:
+		push_error(
+			"MuzzleFlashVFXにplay()がありません: %s"
+			% muzzle_flash.get_path()
+		)
 
 	if fire_sound != null:
 		fire_sound.pitch_scale = randf_range(

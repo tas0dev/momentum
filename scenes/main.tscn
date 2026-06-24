@@ -9,6 +9,12 @@
 [ext_resource type="PackedScene" uid="uid://cibt0w40enr7n" path="res://scenes/wepons/m4a1.tscn" id="8_85g3d"]
 [ext_resource type="PackedScene" uid="uid://dpkcc6px5fxnp" path="res://scenes/props/tereporter_exit.tscn" id="8_tipki"]
 
+[sub_resource type="Environment" id="Environment_qg6d2"]
+glow_enabled = true
+glow_intensity = 0.8
+glow_bloom = 0.05
+glow_hdr_threshold = 0.9
+
 [node name="Main" type="Node3D" unique_id=1141400618]
 
 [node name="Floor" type="CSGBox3D" parent="." unique_id=967190566]
@@ -113,3 +119,6 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 40, 
 
 [node name="M4A1" parent="." unique_id=945268203 instance=ExtResource("8_85g3d")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 7.684699, 0.26741368, 2.4681978)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=618089480]
+environment = SubResource("Environment_qg6d2")
