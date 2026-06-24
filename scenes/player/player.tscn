@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cibt0w40enr7n" path="res://scenes/wepons/m4a1.tscn" id="2_dovo2"]
 [ext_resource type="Script" uid="uid://bmqgdnnsxhntw" path="res://scripts/wepon.gd" id="2_gmlin"]
 [ext_resource type="AudioStream" uid="uid://dnrgmx3hyw2ss" path="res://audios/fire2.mp3" id="4_lvxji"]
-[ext_resource type="PackedScene" uid="uid://cy5gj0qdc77u2" path="res://assets/BinbunVFX/muzzle_flash/effects/muzzle_flash/muzzle_flash_06.tscn" id="4_p47bc"]
+[ext_resource type="PackedScene" uid="uid://qc65wdr7l7jk" path="res://assets/BinbunVFX/muzzle_flash/effects/wide_flash/wide_flash_06.tscn" id="4_p47bc"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1yldb"]
 radius = 0.4
@@ -52,7 +52,7 @@ fire_sound = NodePath("FireSound")
 [node name="Muzzle" type="Marker3D" parent="Head/CameraKick/CameraRecoil/Camera3D/WeponHolder/M4A1" unique_id=1126320622]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, -0.75)
 
-[node name="MuzzleFlashVFX" parent="Head/CameraKick/CameraRecoil/Camera3D/WeponHolder/M4A1/Muzzle" unique_id=1629914272 instance=ExtResource("4_p47bc")]
+[node name="MuzzleFlashVFX" parent="Head/CameraKick/CameraRecoil/Camera3D/WeponHolder/M4A1/Muzzle" unique_id=132982299 instance=ExtResource("4_p47bc")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
 preview = false
 one_shot = true
