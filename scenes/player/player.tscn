@@ -24,21 +24,27 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
 
 [node name="CameraKick" type="Node3D" parent="Head" unique_id=92304712]
 
-[node name="Camera3D" type="Camera3D" parent="Head/CameraKick" unique_id=1249842018]
+[node name="CameraRecoil" type="Node3D" parent="Head/CameraKick" unique_id=408129974]
+
+[node name="Camera3D" type="Camera3D" parent="Head/CameraKick/CameraRecoil" unique_id=1249842018]
 current = true
 fov = 110.0
 
-[node name="WeponHolder" type="Node3D" parent="Head/CameraKick/Camera3D" unique_id=348069041]
+[node name="WeponHolder" type="Node3D" parent="Head/CameraKick/CameraRecoil/Camera3D" unique_id=348069041]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, -0.22, -0.4)
 
-[node name="M4A1" type="Node3D" parent="Head/CameraKick/Camera3D/WeponHolder" unique_id=1791565634 node_paths=PackedStringArray("shoot_ray")]
+[node name="M4A1" type="Node3D" parent="Head/CameraKick/CameraRecoil/Camera3D/WeponHolder" unique_id=1791565634 node_paths=PackedStringArray("shoot_ray", "camera_recoil_node")]
 script = ExtResource("2_gmlin")
 weapon_name = "M4A1"
 shoot_ray = NodePath("../../ShootRay")
+camera_recoil_pitch = 5.0
+camera_recoil_yaw = 5.0
+camera_recoil_max_pitch = 10.0
+camera_recoil_node = NodePath("../../..")
 
-[node name="Model" parent="Head/CameraKick/Camera3D/WeponHolder/M4A1" unique_id=945268203 instance=ExtResource("2_dovo2")]
+[node name="Model" parent="Head/CameraKick/CameraRecoil/Camera3D/WeponHolder/M4A1" unique_id=945268203 instance=ExtResource("2_dovo2")]
 
-[node name="ShootRay" type="RayCast3D" parent="Head/CameraKick/Camera3D" unique_id=1467677024]
+[node name="ShootRay" type="RayCast3D" parent="Head/CameraKick/CameraRecoil/Camera3D" unique_id=1467677024]
 target_position = Vector3(0, -1, -200)
 collide_with_areas = true
 

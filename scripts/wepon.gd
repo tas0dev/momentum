@@ -31,6 +31,27 @@ class_name Weapon
 # 元の位置へ戻る速さ
 @export var recoil_recovery: float = 12.0
 
+# カメラが1発ごとに上へ跳ねる角度
+@export var camera_recoil_pitch: float = 0.65
+
+# カメラが左右へぶれる最大角度
+@export var camera_recoil_yaw: float = 0.18
+
+# 上方向へ蓄積できる最大反動
+@export var camera_recoil_max_pitch: float = 5.0
+
+# 左右へ蓄積できる最大反動
+@export var camera_recoil_max_yaw: float = 1.25
+
+# 発射時に反動へ追従する速さ
+@export var camera_recoil_kick_speed: float = 30.0
+
+# 射撃停止後に中央へ戻る速さ
+@export var camera_recoil_recovery_speed: float = 9.0
+
+# プレイヤーのCameraRecoilノード
+@export var camera_recoil_node: Node3D
+
 # 1秒あたりの発射数
 @export_range(0.1, 30.0, 0.1)
 var fire_rate: float = 10.0
@@ -38,6 +59,8 @@ var fire_rate: float = 10.0
 var rest_position: Vector3
 var rest_rotation: Vector3
 var fire_cooldown: float = 0.0
+var camera_recoil_target: Vector2 = Vector2.ZERO
+var camera_recoil_current: Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
@@ -59,6 +82,8 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	update_camera_recoil(delta)
+	
 	fire_cooldown = maxf(
 		fire_cooldown - delta,
 		0.0
@@ -83,6 +108,7 @@ func _physics_process(delta: float) -> void:
 
 func fire() -> void:
 	apply_recoil()
+	apply_camera_recoil()
 	
 	if shoot_ray == null:
 		return
@@ -155,4 +181,54 @@ func apply_recoil() -> void:
 	rotation_degrees.y += randf_range(
 		-recoil_yaw,
 		recoil_yaw
+	)
+
+func update_camera_recoil(delta: float) -> void:
+	if camera_recoil_node == null:
+		return
+
+	var kick_weight: float = clampf(
+		camera_recoil_kick_speed * delta,
+		0.0,
+		1.0
+	)
+
+	var recovery_weight: float = clampf(
+		camera_recoil_recovery_speed * delta,
+		0.0,
+		1.0
+	)
+
+	camera_recoil_current = camera_recoil_current.lerp(
+		camera_recoil_target,
+		kick_weight
+	)
+
+	camera_recoil_target = camera_recoil_target.lerp(
+		Vector2.ZERO,
+		recovery_weight
+	)
+
+	camera_recoil_node.rotation_degrees.x = (
+		-camera_recoil_current.x
+	)
+
+	camera_recoil_node.rotation_degrees.y = (
+		camera_recoil_current.y
+	)
+
+func apply_camera_recoil() -> void:
+	camera_recoil_target.x = minf(
+		camera_recoil_target.x + camera_recoil_pitch,
+		camera_recoil_max_pitch
+	)
+
+	camera_recoil_target.y = clampf(
+		camera_recoil_target.y
+		+ randf_range(
+			-camera_recoil_yaw,
+			camera_recoil_yaw
+		),
+		-camera_recoil_max_yaw,
+		camera_recoil_max_yaw
 	)
