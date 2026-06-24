@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bldj6jx18p6jw"]
+
+[resource]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 0.3254902, 0.6431373)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
