@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://cibt0w40enr7n"]
+
+[ext_resource type="PackedScene" uid="uid://cx8i6rjcqr20b" path="res://models/guns/m4a1/M4A1.fbx" id="1_22brc"]
+[ext_resource type="Material" uid="uid://dn4ej8ls6mqm1" path="res://materials/wepons/m4a1/m4a1.tres" id="2_bdyml"]
+
+[node name="M4A1" unique_id=945268203 instance=ExtResource("1_22brc")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
+
+[node name="Magazine" parent="M4A1" parent_id_path=PackedInt32Array(368192643) index="0" unique_id=221248789]
+material_override = ExtResource("2_bdyml")
+
+[node name="Base" parent="M4A1" parent_id_path=PackedInt32Array(368192643) index="1" unique_id=1802808213]
+material_override = ExtResource("2_bdyml")
+
+[node name="Charging_Handle" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="0" unique_id=316651687]
+material_override = ExtResource("2_bdyml")
+
+[node name="Sight" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="1" unique_id=96090038]
+material_override = ExtResource("2_bdyml")
+
+[node name="Sight_2" parent="M4A1/Parts/Sight" index="0" unique_id=1005688241]
+material_override = ExtResource("2_bdyml")
+
+[node name="Switch1" parent="M4A1/Parts/Sight" index="1" unique_id=1927640210]
+material_override = ExtResource("2_bdyml")
+
+[node name="Switch2" parent="M4A1/Parts/Sight" index="2" unique_id=858432129]
+material_override = ExtResource("2_bdyml")
+
+[node name="Firemode_Selector" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="2" unique_id=708557705]
+material_override = ExtResource("2_bdyml")
+
+[node name="Trigger" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="3" unique_id=2131968988]
+material_override = ExtResource("2_bdyml")
+
+[node name="Ejector_Lid" parent="M4A1/Parts/Ejector" parent_id_path=PackedInt32Array(1622447183) index="0" unique_id=417931089]
+material_override = ExtResource("2_bdyml")
+
+[node name="Ejector_2" parent="M4A1/Parts/Ejector" parent_id_path=PackedInt32Array(1622447183) index="1" unique_id=1760533224]
+material_override = ExtResource("2_bdyml")
+
+[node name="Barrel" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="5" unique_id=1289017425]
+material_override = ExtResource("2_bdyml")
+
+[node name="Stock" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="6" unique_id=852709010]
+material_override = ExtResource("2_bdyml")

@@ -1,0 +1,8 @@
+[gd_resource type="ORMMaterial3D" format=3 uid="uid://dn4ej8ls6mqm1"]
+
+[ext_resource type="Texture2D" uid="uid://cxbx5j4xiinad" path="res://models/guns/m4a1/M4A1_Base_Color.png" id="1_a35ch"]
+[ext_resource type="Texture2D" uid="uid://dbr4iyvfjc6pr" path="res://models/guns/m4a1/M4A1_Normal.png" id="2_6pgqd"]
+
+[resource]
+albedo_texture = ExtResource("1_a35ch")
+orm_texture = ExtResource("2_6pgqd")

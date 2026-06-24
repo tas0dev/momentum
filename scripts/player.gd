@@ -7,7 +7,7 @@ extends CharacterBody3D
 @export var acceleration: float = 30.0
 
 # 減速度
-@export var friction: float = 35.0
+@export var friction: float = 150.0
 
 # ジャンプ速度
 @export var jump_velocity: float = 6.0

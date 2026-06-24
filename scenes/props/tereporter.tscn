@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bg2b7d1ytb3ey"]
+
+[ext_resource type="Script" uid="uid://ys5bl1j76v7f" path="res://scripts/teleporter.gd" id="1_iiruh"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_1yldb"]
+height = 0.5
+radius = 1.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pyqo5"]
+top_radius = 1.0
+bottom_radius = 1.0
+height = 0.5
+
+[node name="tereporter" type="Area3D" unique_id=1474018627]
+script = ExtResource("1_iiruh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=598037404]
+shape = SubResource("CylinderShape3D_1yldb")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1022957621]
+mesh = SubResource("CylinderMesh_pyqo5")
