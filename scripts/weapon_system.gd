@@ -8,24 +8,38 @@ class_name WeaponSystem
 @onready var shoot_ray: RayCast3D = %ShootRay
 
 var current_weapon: Weapon
-
+var hit_marker: Control
 
 func _ready() -> void:
-	if starting_weapon != null:
-		equip(starting_weapon)
+	hit_marker = get_tree().get_first_node_in_group(
+		"hit_marker"
+	) as Control
+
+	if hit_marker == null:
+		push_error(
+			"hit_markerグループのノードが見つかりません"
+		)
+
+	if starting_weapon == null:
+		push_error(
+			"Starting Weaponが設定されていません"
+		)
+		return
+
+	equip(starting_weapon)
 
 
 func _physics_process(_delta: float) -> void:
 	if current_weapon == null:
 		return
-
+	
 	var wants_to_fire: bool
-
+	
 	if current_weapon.automatic:
 		wants_to_fire = Input.is_action_pressed("fire")
 	else:
 		wants_to_fire = Input.is_action_just_pressed("fire")
-
+	
 	if wants_to_fire:
 		current_weapon.try_fire()
 
@@ -55,3 +69,21 @@ func equip(weapon_scene: PackedScene) -> void:
 		shoot_ray,
 		camera_recoil_node
 	)
+	
+	connect_hit_marker(current_weapon)
+
+func connect_hit_marker(weapon: Weapon) -> void:
+	if hit_marker == null:
+		return
+	
+	var callback := Callable(
+		hit_marker,
+		"show_hit"
+	)
+	
+	if not weapon.hit_confirmed.is_connected(
+		callback
+	):
+		weapon.hit_confirmed.connect(
+			callback
+		)

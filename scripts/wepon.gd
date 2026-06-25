@@ -64,6 +64,8 @@ var camera_recoil_current: Vector2 = Vector2.ZERO
 var camera_recoil_node: Node3D
 var shoot_ray: RayCast3D
 
+signal hit_confirmed
+
 func _ready() -> void:
 	if muzzle_flash != null:
 		muzzle_flash.visible = false
@@ -117,18 +119,18 @@ func fire() -> void:
 		0.0,
 		-max_range
 	)
-
+	
 	shoot_ray.force_raycast_update()
-
+	
 	if not shoot_ray.is_colliding():
 		print(weapon_name, ": miss")
 		return
-
+	
 	var collider: Object = shoot_ray.get_collider()
 	var hit_position: Vector3 = (
 		shoot_ray.get_collision_point()
 	)
-
+	
 	print(
 		weapon_name,
 		": hit ",
@@ -136,12 +138,17 @@ func fire() -> void:
 		" at ",
 		hit_position
 	)
-
+	
 	if (
 		collider != null
 		and collider.has_method("take_damage")
 	):
-		collider.call("take_damage", damage)
+		collider.call(
+			"take_damage",
+			damage
+		)
+	
+		hit_confirmed.emit()
 
 func update_recoil(delta: float) -> void:
 	var weight := clampf(

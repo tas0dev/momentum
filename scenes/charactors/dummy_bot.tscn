@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://dbv17dj5exykm"]
+
+[ext_resource type="Script" uid="uid://cyw8mwea5w7b7" path="res://scripts/dummy_bot.gd" id="1_ev6wt"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_qg6d2"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qg6d2"]
+
+[node name="DummyBot" type="StaticBody3D" unique_id=1533531598]
+script = ExtResource("1_ev6wt")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1299637343]
+mesh = SubResource("CapsuleMesh_qg6d2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1521181925]
+shape = SubResource("CapsuleShape3D_qg6d2")
+
+[node name="HealthLabel" type="Label3D" parent="." unique_id=1590262586]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
