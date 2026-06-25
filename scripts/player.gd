@@ -87,6 +87,18 @@ extends CharacterBody3D
 # 坂によるスライド加速の上限速度
 @export var slide_max_speed: float = 30.0
 
+# ジャンプした瞬間にカメラが下へ遅れる距離
+@export var jump_camera_drop: float = 0.045
+
+# ジャンプした瞬間のカメラ角度
+@export var jump_camera_tilt: float = 5.0
+
+# カメラが動く時間
+@export var jump_camera_kick_time: float = 0.22
+
+# 元へ戻る時間
+@export var jump_camera_return_time: float = 0.38
+
 # 着地前に押したジャンプ入力を保持する時間（秒）
 @export_range(0.0, 0.2, 0.005)
 var jump_buffer_time: float = 0.08
@@ -104,13 +116,15 @@ var spawn_position: Vector3
 var spawn_rotation: Vector3
 var was_on_floor: bool = false
 var landing_kick_amount: float = 0.0
+var jump_camera_tween: Tween
 
 @onready var head: Node3D = $Head
 @onready var standing_collider: CollisionShape3D = $StandingCollider
 @onready var crouching_collider: CollisionShape3D = $CrouchingCollider
 @onready var ceiling_check: ShapeCast3D = $CeilingCheck
 @onready var speed_label: Label = $HUD/SpeedLabel
-@onready var landing_kick: Node3D = $Head/LandingKick
+@onready var landing_kick: Node3D = $Head/JumpMotion/LandingKick
+@onready var jump_motion: Node3D = $Head/JumpMotion
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -151,15 +165,15 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("restart"):
 		restart_player()
-
+	
 	update_jump_buffer(delta)
 	apply_gravity(delta)
-
+	
 	var was_grounded: bool = is_on_floor()
 	var landing_speed: float = maxf(-velocity.y, 0.0)
-
+	
 	var jumped_this_frame := handle_jump()
-
+	
 	handle_movement(delta, jumped_this_frame)
 	update_collider_state()
 
@@ -170,7 +184,7 @@ func _physics_process(delta: float) -> void:
 		was_grounded,
 		landing_speed
 	)
-
+	
 	update_speed_label()
 	update_slide_camera(delta)
 
@@ -344,6 +358,7 @@ func handle_jump() -> bool:
 	if is_on_floor():
 		velocity.y = jump_velocity
 		jump_buffer_timer = 0.0
+		trigger_jump_camera()
 		return true
 
 	return false
@@ -596,4 +611,40 @@ func update_landing_kick(
 		landing_kick_amount,
 		0.0,
 		landing_kick_recovery * delta
+	)
+
+func trigger_jump_camera() -> void:
+	if jump_camera_tween != null:
+		jump_camera_tween.kill()
+
+	jump_camera_tween = create_tween()
+	jump_camera_tween.set_trans(Tween.TRANS_SINE)
+	jump_camera_tween.set_ease(Tween.EASE_IN_OUT)
+
+	jump_camera_tween.tween_property(
+		jump_motion,
+		"position:y",
+		-jump_camera_drop,
+		jump_camera_kick_time
+	)
+
+	jump_camera_tween.parallel().tween_property(
+		jump_motion,
+		"rotation:x",
+		deg_to_rad(jump_camera_tilt),
+		jump_camera_kick_time
+	)
+
+	jump_camera_tween.tween_property(
+		jump_motion,
+		"position:y",
+		0.0,
+		jump_camera_return_time
+	)
+
+	jump_camera_tween.parallel().tween_property(
+		jump_motion,
+		"rotation:x",
+		0.0,
+		jump_camera_return_time
 	)

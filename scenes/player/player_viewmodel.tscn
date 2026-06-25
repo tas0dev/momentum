@@ -22,21 +22,23 @@ script = ExtResource("1_ievca")
 [node name="Head" type="Node3D" parent="." unique_id=185250802]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
 
-[node name="LandingKick" type="Node3D" parent="Head" unique_id=16968492]
+[node name="JumpMotion" type="Node3D" parent="Head" unique_id=977035245]
 
-[node name="CameraKick" type="Node3D" parent="Head/LandingKick" unique_id=92304712]
+[node name="LandingKick" type="Node3D" parent="Head/JumpMotion" unique_id=16968492]
 
-[node name="CameraRecoil" type="Node3D" parent="Head/LandingKick/CameraKick" unique_id=408129974]
+[node name="CameraKick" type="Node3D" parent="Head/JumpMotion/LandingKick" unique_id=92304712]
 
-[node name="Camera3D" type="Camera3D" parent="Head/LandingKick/CameraKick/CameraRecoil" unique_id=1249842018 groups=["world_camera"]]
+[node name="CameraRecoil" type="Node3D" parent="Head/JumpMotion/LandingKick/CameraKick" unique_id=408129974]
+
+[node name="Camera3D" type="Camera3D" parent="Head/JumpMotion/LandingKick/CameraKick/CameraRecoil" unique_id=1249842018 groups=["world_camera"]]
 current = true
 fov = 110.0
 
-[node name="ShootRay" type="RayCast3D" parent="Head/LandingKick/CameraKick/CameraRecoil/Camera3D" unique_id=1467677024]
+[node name="ShootRay" type="RayCast3D" parent="Head/JumpMotion/LandingKick/CameraKick/CameraRecoil/Camera3D" unique_id=1467677024]
 target_position = Vector3(0, -1, -200)
 collide_with_areas = true
 
-[node name="WeaponSystem" parent="Head/LandingKick/CameraKick/CameraRecoil/Camera3D" unique_id=1488599352 node_paths=PackedStringArray("camera_recoil_node") instance=ExtResource("2_ievca")]
+[node name="WeaponSystem" parent="Head/JumpMotion/LandingKick/CameraKick/CameraRecoil/Camera3D" unique_id=1488599352 node_paths=PackedStringArray("camera_recoil_node") instance=ExtResource("2_ievca")]
 starting_weapon = ExtResource("2_rljg1")
 camera_recoil_node = NodePath("../../..")
 
