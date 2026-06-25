@@ -50,7 +50,7 @@ class_name Weapon
 @export var muzzle_flash: Node3D
 
 # 発砲音
-@export var fire_sound: AudioStreamPlayer3D
+@export var fire_sound: AudioStreamPlayer
 
 # 1秒あたりの発射数
 @export_range(0.1, 30.0, 0.1)
@@ -233,21 +233,20 @@ func apply_camera_recoil() -> void:
 	)
 
 func play_fire_effects() -> void:
-	if muzzle_flash == null:
-		push_error(
+	if muzzle_flash != null:
+		muzzle_flash.visible = true
+
+		if muzzle_flash.has_method("play"):
+			muzzle_flash.call("play")
+		else:
+			push_error(
+				"MuzzleFlashVFXにplay()がありません: %s"
+				% muzzle_flash.get_path()
+			)
+	else:
+		push_warning(
 			"マズルフラッシュが設定されていません: %s"
 			% weapon_name
-		)
-		return
-
-	muzzle_flash.visible = true
-
-	if muzzle_flash.has_method("play"):
-		muzzle_flash.call("play")
-	else:
-		push_error(
-			"MuzzleFlashVFXにplay()がありません: %s"
-			% muzzle_flash.get_path()
 		)
 
 	if fire_sound != null:
@@ -256,3 +255,8 @@ func play_fire_effects() -> void:
 			1.03
 		)
 		fire_sound.play()
+	else:
+		push_warning(
+			"発砲音が設定されていません。流石にチートです: %s"
+			% weapon_name
+		)

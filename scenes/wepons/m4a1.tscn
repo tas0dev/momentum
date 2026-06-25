@@ -28,8 +28,7 @@ preview = false
 one_shot = true
 autoplay = false
 
-[node name="FireSound" type="AudioStreamPlayer3D" parent="." unique_id=295599537]
-transform = Transform3D(1, 0, 0, 0, 0.9989003, 0.046885207, 0, -0.046885207, 0.9989003, 0.37074342, -0.2380558, -0.82549155)
+[node name="FireSound" type="AudioStreamPlayer" parent="." unique_id=58529143]
 stream = ExtResource("4_1c605")
 
 [node name="ArmsOffSet" type="Node3D" parent="." unique_id=467815327]
