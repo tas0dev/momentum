@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://bxc1tfkeafo7a"]
 
-[ext_resource type="PackedScene" uid="uid://df522tsmkg3dg" path="res://scenes/player/player.tscn" id="1_o5qli"]
 [ext_resource type="Material" uid="uid://bdd0l6ls5empc" path="res://materials/prototype_textures/materials/grey_material.tres" id="1_sugp2"]
 [ext_resource type="Material" uid="uid://by5encxbbc8ur" path="res://materials/prototype_textures/materials/blue_material.tres" id="3_jyhfs"]
 [ext_resource type="Material" uid="uid://cxei1ugbnqkws" path="res://materials/prototype_textures/materials/black_material.tres" id="4_jyhfs"]
 [ext_resource type="Material" uid="uid://bhxov55o4cgfs" path="res://materials/prototype_textures/materials/orange_material.tres" id="4_tbgi4"]
 [ext_resource type="PackedScene" uid="uid://bg2b7d1ytb3ey" path="res://scenes/props/tereporter.tscn" id="7_o6xl0"]
-[ext_resource type="PackedScene" uid="uid://cibt0w40enr7n" path="res://scenes/wepons/m4a1.tscn" id="8_85g3d"]
+[ext_resource type="PackedScene" uid="uid://cibt0w40enr7n" path="res://assets/wepons/m4a1.tscn" id="8_85g3d"]
+[ext_resource type="PackedScene" uid="uid://c3i65cvksnqqo" path="res://scenes/player/player_viewmodel.tscn" id="8_choun"]
 [ext_resource type="PackedScene" uid="uid://dpkcc6px5fxnp" path="res://scenes/props/tereporter_exit.tscn" id="8_tipki"]
 
 [sub_resource type="Environment" id="Environment_qg6d2"]
@@ -26,9 +26,6 @@ size = Vector3(50, 1, 100)
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1256063636]
 transform = Transform3D(1, 0, 0, 0, 0.64278764, 0.76604444, 0, -0.76604444, 0.64278764, 0, 6.0627584, 16.532475)
 shadow_enabled = true
-
-[node name="Player" parent="." unique_id=1411576541 instance=ExtResource("1_o5qli")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 1, 0)
 
 [node name="PlayGround" type="Node3D" parent="." unique_id=647195204]
 
@@ -122,3 +119,6 @@ transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 7.684699, 0.26741368, 2
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=618089480]
 environment = SubResource("Environment_qg6d2")
+
+[node name="Player" parent="." unique_id=256163389 instance=ExtResource("8_choun")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)

@@ -16,9 +16,6 @@ class_name Weapon
 # 現在この武器を使用できるか
 @export var is_active: bool = true
 
-# カメラ中央から飛ばすレイ
-@export var shoot_ray: RayCast3D
-
 # 1発ごとの銃の跳ね上がり角度
 @export var recoil_pitch: float = 2.0
 
@@ -52,9 +49,6 @@ class_name Weapon
 # 銃口の発光
 @export var muzzle_flash: Node3D
 
-# プレイヤーのCameraRecoilノード
-@export var camera_recoil_node: Node3D
-
 # 発砲音
 @export var fire_sound: AudioStreamPlayer3D
 
@@ -67,6 +61,8 @@ var rest_rotation: Vector3
 var fire_cooldown: float = 0.0
 var camera_recoil_target: Vector2 = Vector2.ZERO
 var camera_recoil_current: Vector2 = Vector2.ZERO
+var camera_recoil_node: Node3D
+var shoot_ray: RayCast3D
 
 func _ready() -> void:
 	if muzzle_flash != null:
@@ -74,45 +70,39 @@ func _ready() -> void:
 	
 	rest_position = position
 	rest_rotation = rotation
-	
-	if shoot_ray == null:
-		push_error(
-			weapon_name
-			+ ": ShootRayが設定されていません"
-		)
-		return
 
+func _physics_process(delta: float) -> void:
+	update_camera_recoil(delta)
+	update_recoil(delta)
+	
+	fire_cooldown = maxf(
+		fire_cooldown - delta,
+		0.0
+	)
+
+func setup(
+	ray: RayCast3D,
+	recoil_node: Node3D
+) -> void:
+	shoot_ray = ray
+	camera_recoil_node = recoil_node
+
+	shoot_ray.enabled = true
 	shoot_ray.target_position = Vector3(
 		0.0,
 		0.0,
 		-max_range
 	)
 
-
-func _physics_process(delta: float) -> void:
-	update_camera_recoil(delta)
-	
-	fire_cooldown = maxf(
-		fire_cooldown - delta,
-		0.0
-	)
-	
+func try_fire() -> void:
 	if not is_active:
 		return
 	
-	var wants_to_fire: bool
+	if fire_cooldown > 0.0:
+		return
 	
-	if automatic:
-		wants_to_fire = Input.is_action_pressed("fire")
-	else:
-		wants_to_fire = Input.is_action_just_pressed("fire")
-
-	if wants_to_fire and fire_cooldown <= 0.0:
-		fire()
-		fire_cooldown = 1.0 / fire_rate
-	
-	update_recoil(delta)
-
+	fire()
+	fire_cooldown = 1.0 / fire_rate
 
 func fire() -> void:
 	apply_recoil()

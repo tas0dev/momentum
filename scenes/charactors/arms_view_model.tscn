@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dtu2lw8rxirdj"]
+
+[ext_resource type="PackedScene" uid="uid://c1pf22132of02" path="res://assets/charactors/first_person_bot.tscn" id="1_6541y"]
+
+[node name="ArmsViewmodel" type="Node3D" unique_id=2042829878]
+
+[node name="FirstPersonBot" parent="." unique_id=914713489 instance=ExtResource("1_6541y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.012265563, 0, 0.2314384)

@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://bv267xl07pyi7"]
+
+[ext_resource type="Script" uid="uid://dplx7pfgua8lf" path="res://scripts/weapon_system.gd" id="1_pusbt"]
+
+[node name="WeaponSystem" type="Node3D" unique_id=1488599352]
+script = ExtResource("1_pusbt")
+
+[node name="ViewModelSocket" type="Node3D" parent="." unique_id=1970812721]
+
+[node name="ShootRay" type="RayCast3D" parent="." unique_id=4678660]

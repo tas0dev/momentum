@@ -1,46 +1,41 @@
-[gd_scene format=3 uid="uid://cibt0w40enr7n"]
+[gd_scene format=3 uid="uid://b6ea0lqlsl6qu"]
 
-[ext_resource type="PackedScene" uid="uid://cx8i6rjcqr20b" path="res://models/guns/m4a1/M4A1.fbx" id="1_22brc"]
-[ext_resource type="Material" uid="uid://dn4ej8ls6mqm1" path="res://materials/wepons/m4a1/m4a1.tres" id="2_bdyml"]
+[ext_resource type="Script" uid="uid://bmqgdnnsxhntw" path="res://scripts/wepon.gd" id="1_hj8qv"]
+[ext_resource type="PackedScene" uid="uid://cibt0w40enr7n" path="res://assets/wepons/m4a1.tscn" id="2_ovj0k"]
+[ext_resource type="PackedScene" uid="uid://qc65wdr7l7jk" path="res://assets/BinbunVFX/muzzle_flash/effects/wide_flash/wide_flash_06.tscn" id="3_y0xc6"]
+[ext_resource type="AudioStream" uid="uid://dnrgmx3hyw2ss" path="res://audios/fire2.mp3" id="4_1c605"]
+[ext_resource type="PackedScene" uid="uid://dtu2lw8rxirdj" path="res://scenes/charactors/arms_view_model.tscn" id="5_ovj0k"]
 
-[node name="M4A1" unique_id=945268203 instance=ExtResource("1_22brc")]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
+[node name="M4A1" type="Node3D" unique_id=1877748843 node_paths=PackedStringArray("muzzle_flash", "fire_sound")]
+script = ExtResource("1_hj8qv")
+weapon_name = "M4A1"
+camera_recoil_pitch = -5.0
+camera_recoil_yaw = -5.0
+camera_recoil_max_pitch = -10.0
+camera_recoil_max_yaw = 3.0
+muzzle_flash = NodePath("Muzzle/MuzzleFlashVFX")
+fire_sound = NodePath("FireSound")
 
-[node name="Magazine" parent="M4A1" parent_id_path=PackedInt32Array(368192643) index="0" unique_id=221248789]
-material_override = ExtResource("2_bdyml")
+[node name="Model" parent="." unique_id=945268203 instance=ExtResource("2_ovj0k")]
+transform = Transform3D(1.5, 0, 0, 0, 1.4983504, 0.07032781, 0, -0.07032781, 1.4983504, 0.2860689, -0.317088, -0.49695918)
 
-[node name="Base" parent="M4A1" parent_id_path=PackedInt32Array(368192643) index="1" unique_id=1802808213]
-material_override = ExtResource("2_bdyml")
+[node name="Muzzle" type="Marker3D" parent="." unique_id=677277098]
+transform = Transform3D(1, 0, 0, 0, 0.9989003, 0.046885207, 0, -0.046885207, 0.9989003, 0.2860689, -0.30063105, -1.2127752)
 
-[node name="Charging_Handle" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="0" unique_id=316651687]
-material_override = ExtResource("2_bdyml")
+[node name="MuzzleFlashVFX" parent="Muzzle" unique_id=132982299 instance=ExtResource("3_y0xc6")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+preview = false
+one_shot = true
+autoplay = false
 
-[node name="Sight" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="1" unique_id=96090038]
-material_override = ExtResource("2_bdyml")
+[node name="FireSound" type="AudioStreamPlayer3D" parent="." unique_id=295599537]
+transform = Transform3D(1, 0, 0, 0, 0.9989003, 0.046885207, 0, -0.046885207, 0.9989003, 0.37074342, -0.2380558, -0.52711326)
+stream = ExtResource("4_1c605")
 
-[node name="Sight_2" parent="M4A1/Parts/Sight" index="0" unique_id=1005688241]
-material_override = ExtResource("2_bdyml")
+[node name="ArmsOffSet" type="Node3D" parent="." unique_id=467815327]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.2, -1.7525061, 0.13006742)
 
-[node name="Switch1" parent="M4A1/Parts/Sight" index="1" unique_id=1927640210]
-material_override = ExtResource("2_bdyml")
+[node name="ArmsViewmodel" parent="ArmsOffSet" unique_id=2042829878 instance=ExtResource("5_ovj0k")]
 
-[node name="Switch2" parent="M4A1/Parts/Sight" index="2" unique_id=858432129]
-material_override = ExtResource("2_bdyml")
-
-[node name="Firemode_Selector" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="2" unique_id=708557705]
-material_override = ExtResource("2_bdyml")
-
-[node name="Trigger" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="3" unique_id=2131968988]
-material_override = ExtResource("2_bdyml")
-
-[node name="Ejector_Lid" parent="M4A1/Parts/Ejector" parent_id_path=PackedInt32Array(1622447183) index="0" unique_id=417931089]
-material_override = ExtResource("2_bdyml")
-
-[node name="Ejector_2" parent="M4A1/Parts/Ejector" parent_id_path=PackedInt32Array(1622447183) index="1" unique_id=1760533224]
-material_override = ExtResource("2_bdyml")
-
-[node name="Barrel" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="5" unique_id=1289017425]
-material_override = ExtResource("2_bdyml")
-
-[node name="Stock" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="6" unique_id=852709010]
-material_override = ExtResource("2_bdyml")
+[node name="Camera3D" type="Camera3D" parent="." unique_id=585849289]
+fov = 110.0
