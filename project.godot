@@ -26,6 +26,11 @@ window/stretch/aspect="expand"
 movie_writer/movie_file="/home/jine/Videos/momentum.avi"
 movie_writer/disable_vsync=true
 
+[global_group]
+
+world_sun="ライトをビューモデルと同期する"
+world_camera="カメラ"
+
 [input]
 
 move_forward={

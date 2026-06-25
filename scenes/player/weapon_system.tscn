@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bv267xl07pyi7"]
 
 [ext_resource type="Script" uid="uid://dplx7pfgua8lf" path="res://scripts/weapon_system.gd" id="1_pusbt"]
+[ext_resource type="Script" uid="uid://dk77ibll0tq2i" path="res://scripts/sun.gd" id="2_ex0gc"]
 
 [node name="WeaponSystem" type="Node3D" unique_id=1488599352]
 script = ExtResource("1_pusbt")
@@ -25,10 +26,13 @@ stretch = true
 [node name="ViewModelViewPort" type="SubViewport" parent="ViewModelLayer/ViewModelContainer" unique_id=512010906]
 own_world_3d = true
 transparent_bg = true
+handle_input_locally = false
+msaa_3d = 2
 size = Vector2i(1152, 648)
 render_target_update_mode = 4
 
 [node name="ViewModelWorld" type="Node3D" parent="ViewModelLayer/ViewModelContainer/ViewModelViewPort" unique_id=1843790372]
+script = ExtResource("2_ex0gc")
 
 [node name="ViewModelCamera" type="Camera3D" parent="ViewModelLayer/ViewModelContainer/ViewModelViewPort/ViewModelWorld" unique_id=168916322]
 current = true
@@ -38,6 +42,12 @@ far = 10.0
 
 [node name="ViewModelLight" type="DirectionalLight3D" parent="ViewModelLayer/ViewModelContainer/ViewModelViewPort/ViewModelWorld" unique_id=1470738743]
 transform = Transform3D(0.8660254, 0.35355338, -0.35355338, 0, 0.70710677, 0.70710677, 0.5, -0.6123724, 0.6123724, 0, 0, 0)
+light_cull_mask = 4293918722
+shadow_enabled = true
 
 [node name="ViewModelSocket" type="Node3D" parent="ViewModelLayer/ViewModelContainer/ViewModelViewPort/ViewModelWorld" unique_id=293053644]
 unique_name_in_owner = true
+
+[node name="ViewModelBaseLight" type="DirectionalLight3D" parent="ViewModelLayer/ViewModelContainer/ViewModelViewPort/ViewModelWorld" unique_id=372088304]
+light_energy = 0.25
+sky_mode = 1

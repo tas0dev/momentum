@@ -7,40 +7,53 @@
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
 
 [node name="Magazine" parent="M4A1" parent_id_path=PackedInt32Array(368192643) index="0" unique_id=221248789]
+layers = 2
 material_override = ExtResource("2_bdyml")
 
 [node name="Base" parent="M4A1" parent_id_path=PackedInt32Array(368192643) index="1" unique_id=1802808213]
+layers = 2
 material_override = ExtResource("2_bdyml")
 
 [node name="Charging_Handle" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="0" unique_id=316651687]
+layers = 2
 material_override = ExtResource("2_bdyml")
 
 [node name="Sight" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="1" unique_id=96090038]
+layers = 2
 material_override = ExtResource("2_bdyml")
 
 [node name="Sight_2" parent="M4A1/Parts/Sight" index="0" unique_id=1005688241]
+layers = 2
 material_override = ExtResource("2_bdyml")
 
 [node name="Switch1" parent="M4A1/Parts/Sight" index="1" unique_id=1927640210]
+layers = 2
 material_override = ExtResource("2_bdyml")
 
 [node name="Switch2" parent="M4A1/Parts/Sight" index="2" unique_id=858432129]
+layers = 2
 material_override = ExtResource("2_bdyml")
 
 [node name="Firemode_Selector" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="2" unique_id=708557705]
+layers = 2
 material_override = ExtResource("2_bdyml")
 
 [node name="Trigger" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="3" unique_id=2131968988]
+layers = 2
 material_override = ExtResource("2_bdyml")
 
 [node name="Ejector_Lid" parent="M4A1/Parts/Ejector" parent_id_path=PackedInt32Array(1622447183) index="0" unique_id=417931089]
+layers = 2
 material_override = ExtResource("2_bdyml")
 
 [node name="Ejector_2" parent="M4A1/Parts/Ejector" parent_id_path=PackedInt32Array(1622447183) index="1" unique_id=1760533224]
+layers = 2
 material_override = ExtResource("2_bdyml")
 
 [node name="Barrel" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="5" unique_id=1289017425]
+layers = 2
 material_override = ExtResource("2_bdyml")
 
 [node name="Stock" parent="M4A1/Parts" parent_id_path=PackedInt32Array(1153915421) index="6" unique_id=852709010]
+layers = 2
 material_override = ExtResource("2_bdyml")

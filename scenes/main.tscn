@@ -23,7 +23,7 @@ material_override = ExtResource("1_sugp2")
 use_collision = true
 size = Vector3(50, 1, 100)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1256063636]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1256063636 groups=["world_sun"]]
 transform = Transform3D(1, 0, 0, 0, 0.64278764, 0.76604444, 0, -0.76604444, 0.64278764, 0, 6.0627584, 16.532475)
 shadow_enabled = true
 
