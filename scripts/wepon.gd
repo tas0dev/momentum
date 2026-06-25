@@ -1,58 +1,58 @@
 extends Node3D
 class_name Weapon
 
-# 武器名
+## 武器名
 @export var weapon_name: String = "Weapon"
 
-# 1発あたりのダメージ
+## 1発あたりのダメージ
 @export var damage: float = 20.0
 
-# 最大射程
+## 最大射程
 @export var max_range: float = 200.0
 
-# 押し続けたときに連射するか
+## 押し続けたときに連射するか
 @export var automatic: bool = true
 
-# 現在この武器を使用できるか
+## 現在この武器を使用できるか
 @export var is_active: bool = true
 
-# 1発ごとの銃の跳ね上がり角度
+## 1発ごとの銃の跳ね上がり角度
 @export var recoil_pitch: float = 2.0
 
-# 左右へぶれる最大角度
+## 左右へぶれる最大角度
 @export var recoil_yaw: float = 0.5
 
-# 銃が手前へ下がる距離
+## 銃が手前へ下がる距離
 @export var recoil_back: float = 0.05
 
-# 元の位置へ戻る速さ
+## 元の位置へ戻る速さ
 @export var recoil_recovery: float = 12.0
 
-# カメラが1発ごとに上へ跳ねる角度
+## カメラが1発ごとに上へ跳ねる角度
 @export var camera_recoil_pitch: float = 0.65
 
-# カメラが左右へぶれる最大角度
+## カメラが左右へぶれる最大角度
 @export var camera_recoil_yaw: float = 0.18
 
-# 上方向へ蓄積できる最大反動
+## 上方向へ蓄積できる最大反動
 @export var camera_recoil_max_pitch: float = 5.0
 
-# 左右へ蓄積できる最大反動
+## 左右へ蓄積できる最大反動
 @export var camera_recoil_max_yaw: float = 1.25
 
-# 発射時に反動へ追従する速さ
+## 発射時に反動へ追従する速さ
 @export var camera_recoil_kick_speed: float = 30.0
 
-# 射撃停止後に中央へ戻る速さ
+## 射撃停止後に中央へ戻る速さ
 @export var camera_recoil_recovery_speed: float = 9.0
 
-# 銃口の発光
+## 銃口の発光
 @export var muzzle_flash: Node3D
 
-# 発砲音
+## 発砲音
 @export var fire_sound: AudioStreamPlayer
 
-# 1秒あたりの発射数
+## 1秒あたりの発射数
 @export_range(0.1, 30.0, 0.1)
 var fire_rate: float = 10.0
 

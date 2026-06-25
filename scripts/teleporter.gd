@@ -1,12 +1,12 @@
 extends Area3D
 
-# テレポート先
+## テレポート先
 @export var destination: Marker3D
 
-# テレポート前の速度を維持するか
+## テレポート前の速度を維持するか
 @export var preserve_velocity: bool = true
 
-# 出口で即座に再テレポートしないための時間
+## 出口で即座に再テレポートしないための時間
 @export var teleport_lock_time: float = 0.15
 
 

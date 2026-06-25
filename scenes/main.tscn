@@ -61,7 +61,11 @@ size = Vector3(5, 1, 10)
 
 [node name="Tereporter" parent="PlayGround" unique_id=1842991945 node_paths=PackedStringArray("destination") instance=ExtResource("7_o6xl0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -10)
-destination = NodePath("../../TereporterExit")
+destination = NodePath("../TereporterExit")
+
+[node name="Tereporter2" parent="PlayGround" unique_id=1474018627 node_paths=PackedStringArray("destination") instance=ExtResource("7_o6xl0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -15)
+destination = NodePath("../TereporterExit - TOP")
 
 [node name="Ramp2" type="CSGBox3D" parent="PlayGround" unique_id=362787376]
 transform = Transform3D(1, 0, 0, 0, 0.8660254, -0.5, 0, 0.5, 0.8660254, 40, 7, 20)
@@ -82,6 +86,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
 
 [node name="DummyBot4" parent="PlayGround/Bots" unique_id=293774300 instance=ExtResource("5_85g3d")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+
+[node name="TereporterExit" parent="PlayGround" unique_id=670940120 instance=ExtResource("8_tipki")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 40, 15, 8)
+
+[node name="TereporterExit - TOP" parent="PlayGround" unique_id=780330378 instance=ExtResource("8_tipki")]
+transform = Transform3D(1, 0, 1.7484555e-07, 0, 1, 0, -1.7484555e-07, 0, 1, 0, 180, 0)
 
 [node name="TestArena" type="Node3D" parent="." unique_id=1932419039]
 
@@ -126,9 +136,6 @@ material_override = ExtResource("3_jyhfs")
 use_collision = true
 size = Vector3(1, 5, 10)
 
-[node name="TereporterExit" parent="." unique_id=670940120 instance=ExtResource("8_tipki")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 40, 15, 8)
-
 [node name="M4A1" parent="." unique_id=945268203 instance=ExtResource("8_85g3d")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 7.684699, 0.26741368, 2.4681978)
 
@@ -137,3 +144,5 @@ environment = SubResource("Environment_qg6d2")
 
 [node name="Player" parent="." unique_id=256163389 instance=ExtResource("8_choun")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+gravity = 20.0
+landing_kick_angle = 30.0

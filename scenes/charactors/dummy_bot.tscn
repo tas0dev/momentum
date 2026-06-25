@@ -9,7 +9,7 @@
 [node name="DummyBot" type="StaticBody3D" unique_id=1533531598]
 script = ExtResource("1_ev6wt")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1299637343]
+[node name="Mesh" type="MeshInstance3D" parent="." unique_id=1299637343]
 mesh = SubResource("CapsuleMesh_qg6d2")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1521181925]

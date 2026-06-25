@@ -1,110 +1,110 @@
 extends CharacterBody3D
 
-# 地上での最大移動速度
+## 地上での最大移動速度
 @export var move_speed: float = 7.0
 
-# 加速度
+## 加速度
 @export var acceleration: float = 30.0
 
-# 減速度
+## 減速度
 @export var friction: float = 150.0
 
-# ジャンプ速度
+## ジャンプ速度
 @export var jump_velocity: float = 6.0
 
-# 重力
+## 重力
 @export var gravity: float = 18.0
 
-# マウス感度
+## マウス感度
 @export var mouse_sensitivity: float = 0.002
 
-# ストレイフの感度
+## ストレイフの感度
 @export var air_acceleration: float = 18.0
 
-# 空中での加速上限
+## 空中での加速上限
 @export var air_speed_cap: float = 3.0
 
-# 空中加速量を計算するときの基準速度
+## 空中加速量を計算するときの基準速度
 @export var air_wish_speed: float = 7.0
 
-# スライドを開始できる最低速度
+## スライドを開始できる最低速度
 @export var slide_min_speed: float = 6
 
-# スライド中の減速度
+## スライド中の減速度
 @export var slide_friction: float = 4.0
 
-# スライドを終了する速度
+## スライドを終了する速度
 @export var slide_end_speed: float = 0.5
 
-# 立ってるときの視点高さ
+## 立ってるときの視点高さ
 @export var stand_head_h: float = 0.65
 
-# スライド、しゃがみ中の視点高さ
+## スライド、しゃがみ中の視点高さ
 @export var slide_head_h: float = 0.25
 
-# 視点の高さが切り替わる速度
+## 視点の高さが切り替わる速度
 @export var slide_camera_speed: float = 8.0
 
-# しゃがみ中の移動速度
+## しゃがみ中の移動速度
 @export var crouch_speed: float = 3
 
-# しゃがみ状態時の加速度
+## しゃがみ状態時の加速度
 @export var crouch_acceleration: float = 5.0
 
-# しゃがみ中の減速度
+## しゃがみ中の減速度
 @export var crouch_friction: float = 5.0
 
-# 壁蹴りの強度
+## 壁蹴りの強度
 @export var wall_kick_speed: float = 7.0
 
-# 壁蹴りの上方向への速度
+## 壁蹴りの上方向への速度
 @export var wall_kick_vertical_speed: float = 6.0
 
-# 壁蹴りで最低限保証する水平速度
+## 壁蹴りで最低限保証する水平速度
 @export var wall_kick_min_horizontal_speed: float = 9.0
 
-# 壁蹴り時に現在速度へ追加する倍率
+## 壁蹴り時に現在速度へ追加する倍率
 @export var wall_kick_speed_boost: float = 1.08
 
-# 着地時に視点が下へ傾く最大角度
+## 着地時に視点が下へ傾く最大角度
 @export var landing_kick_angle: float = 8.0
 
-# 着地時に視点が沈む最大距離
+## 着地時に視点が沈む最大距離
 @export var landing_kick_drop: float = 0.25
 
-# 着地演出が発生する最低落下速度
+## 着地演出が発生する最低落下速度
 @export var landing_kick_min_speed: float = 6.0
 
-# 最大の着地演出になる落下速度
+## 最大の着地演出になる落下速度
 @export var landing_kick_max_speed: float = 12.0
 
-# 着地した視点が元へ戻る速度
+## 着地した視点が元へ戻る速度
 @export var landing_kick_recovery: float = 8.0
 
-# 坂をスライドするときの加速力
+## 坂をスライドするときの加速力
 @export var slide_slope_acceleration: float = 20.0
 
-# 坂によるスライド加速の上限速度
+## 坂によるスライド加速の上限速度
 @export var slide_max_speed: float = 30.0
 
-# ジャンプした瞬間にカメラが下へ遅れる距離
+## ジャンプした瞬間にカメラが下へ遅れる距離
 @export var jump_camera_drop: float = 0.045
 
-# ジャンプした瞬間のカメラ角度
+## ジャンプした瞬間のカメラ角度
 @export var jump_camera_tilt: float = 5.0
 
-# カメラが動く時間
+## カメラが動く時間
 @export var jump_camera_kick_time: float = 0.22
 
-# 元へ戻る時間
+## 元へ戻る時間
 @export var jump_camera_return_time: float = 0.38
 
-# 着地前に押したジャンプ入力を保持する時間（秒）
+## 着地前に押したジャンプ入力を保持する時間（秒）
 @export_range(0.0, 0.2, 0.005)
 var jump_buffer_time: float = 0.08
 var jump_buffer_timer: float = 0.0
 
-# 同じ壁として扱う法線の類似度
+## 同じ壁として扱う法線の類似度
 @export_range(-1.0, 1.0, 0.05)
 var same_wall_dot_threshold: float = 0.8
 var last_wall_normal: Vector3 = Vector3.ZERO
