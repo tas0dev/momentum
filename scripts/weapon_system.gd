@@ -4,8 +4,8 @@ class_name WeaponSystem
 @export var starting_weapon: PackedScene
 @export var camera_recoil_node: Node3D
 
-@onready var viewmodel_socket: Node3D = $ViewModelSocket
-@onready var shoot_ray: RayCast3D = $ShootRay
+@onready var viewmodel_socket: Node3D = %ViewModelSocket
+@onready var shoot_ray: RayCast3D = %ShootRay
 
 var current_weapon: Weapon
 

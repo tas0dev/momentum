@@ -8,3 +8,36 @@ script = ExtResource("1_pusbt")
 [node name="ViewModelSocket" type="Node3D" parent="." unique_id=1970812721]
 
 [node name="ShootRay" type="RayCast3D" parent="." unique_id=4678660]
+unique_name_in_owner = true
+
+[node name="ViewModelLayer" type="CanvasLayer" parent="." unique_id=19283404]
+layer = 10
+
+[node name="ViewModelContainer" type="SubViewportContainer" parent="ViewModelLayer" unique_id=2087014958]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch = true
+
+[node name="ViewModelViewPort" type="SubViewport" parent="ViewModelLayer/ViewModelContainer" unique_id=512010906]
+own_world_3d = true
+transparent_bg = true
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="ViewModelWorld" type="Node3D" parent="ViewModelLayer/ViewModelContainer/ViewModelViewPort" unique_id=1843790372]
+
+[node name="ViewModelCamera" type="Camera3D" parent="ViewModelLayer/ViewModelContainer/ViewModelViewPort/ViewModelWorld" unique_id=168916322]
+current = true
+fov = 60.0
+near = 0.01
+far = 10.0
+
+[node name="ViewModelLight" type="DirectionalLight3D" parent="ViewModelLayer/ViewModelContainer/ViewModelViewPort/ViewModelWorld" unique_id=1470738743]
+transform = Transform3D(0.8660254, 0.35355338, -0.35355338, 0, 0.70710677, 0.70710677, 0.5, -0.6123724, 0.6123724, 0, 0, 0)
+
+[node name="ViewModelSocket" type="Node3D" parent="ViewModelLayer/ViewModelContainer/ViewModelViewPort/ViewModelWorld" unique_id=293053644]
+unique_name_in_owner = true

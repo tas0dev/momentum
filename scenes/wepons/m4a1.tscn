@@ -17,10 +17,10 @@ muzzle_flash = NodePath("Muzzle/MuzzleFlashVFX")
 fire_sound = NodePath("FireSound")
 
 [node name="Model" parent="." unique_id=945268203 instance=ExtResource("2_ovj0k")]
-transform = Transform3D(1.5, 0, 0, 0, 1.4983504, 0.07032781, 0, -0.07032781, 1.4983504, 0.2860689, -0.317088, -0.49695918)
+transform = Transform3D(1.5, 0, 0, 0, 1.4983504, 0.07032781, 0, -0.07032781, 1.4983504, 0.2860689, -0.317088, -0.79533744)
 
 [node name="Muzzle" type="Marker3D" parent="." unique_id=677277098]
-transform = Transform3D(1, 0, 0, 0, 0.9989003, 0.046885207, 0, -0.046885207, 0.9989003, 0.2860689, -0.30063105, -1.2127752)
+transform = Transform3D(1, 0, 0, 0, 0.9989003, 0.046885207, 0, -0.046885207, 0.9989003, 0.2860689, -0.30063105, -1.5111535)
 
 [node name="MuzzleFlashVFX" parent="Muzzle" unique_id=132982299 instance=ExtResource("3_y0xc6")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
@@ -29,13 +29,13 @@ one_shot = true
 autoplay = false
 
 [node name="FireSound" type="AudioStreamPlayer3D" parent="." unique_id=295599537]
-transform = Transform3D(1, 0, 0, 0, 0.9989003, 0.046885207, 0, -0.046885207, 0.9989003, 0.37074342, -0.2380558, -0.52711326)
+transform = Transform3D(1, 0, 0, 0, 0.9989003, 0.046885207, 0, -0.046885207, 0.9989003, 0.37074342, -0.2380558, -0.82549155)
 stream = ExtResource("4_1c605")
 
 [node name="ArmsOffSet" type="Node3D" parent="." unique_id=467815327]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.2, -1.7525061, 0.13006742)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.2, -1.7525061, -0.16831082)
 
 [node name="ArmsViewmodel" parent="ArmsOffSet" unique_id=2042829878 instance=ExtResource("5_ovj0k")]
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=585849289]
-fov = 110.0
+fov = 60.0
