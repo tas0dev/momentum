@@ -110,7 +110,7 @@ var landing_kick_amount: float = 0.0
 @onready var crouching_collider: CollisionShape3D = $CrouchingCollider
 @onready var ceiling_check: ShapeCast3D = $CeilingCheck
 @onready var speed_label: Label = $HUD/SpeedLabel
-@onready var camera_kick: Node3D = $Head/CameraKick
+@onready var landing_kick: Node3D = $Head/LandingKick
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -583,11 +583,11 @@ func update_landing_kick(
 			1.0
 		)
 
-	camera_kick.rotation.x = deg_to_rad(
+	landing_kick.rotation.x = deg_to_rad(
 		landing_kick_angle * landing_kick_amount
 	)
 
-	camera_kick.position.y = (
+	landing_kick.position.y = (
 		-landing_kick_drop
 		* landing_kick_amount
 	)
