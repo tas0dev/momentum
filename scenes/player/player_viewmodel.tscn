@@ -52,6 +52,46 @@ offset_right = 40.0
 offset_bottom = 23.0
 text = "SPEED: 0.0"
 
+[node name="CrossHair" type="Control" parent="HUD" unique_id=1216166223]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 21.0
+offset_bottom = 21.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Top" type="ColorRect" parent="HUD/CrossHair" unique_id=1647278151]
+layout_mode = 0
+offset_left = 19.0
+offset_right = 22.0
+offset_bottom = 13.0
+
+[node name="Left" type="ColorRect" parent="HUD/CrossHair" unique_id=2113106432]
+layout_mode = 0
+offset_top = 19.0
+offset_right = 13.0
+offset_bottom = 22.0
+
+[node name="Right" type="ColorRect" parent="HUD/CrossHair" unique_id=1227883622]
+layout_mode = 0
+offset_left = 28.0
+offset_top = 19.0
+offset_right = 41.0
+offset_bottom = 22.0
+
+[node name="Buttom" type="ColorRect" parent="HUD/CrossHair" unique_id=1906916939]
+layout_mode = 0
+offset_left = 19.0
+offset_top = 28.0
+offset_right = 22.0
+offset_bottom = 41.0
+
 [node name="CeilingCheck" type="ShapeCast3D" parent="." unique_id=1494424977]
 shape = SubResource("CapsuleShape3D_o5qli")
 target_position = Vector3(0, 0.5, 0)
