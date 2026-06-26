@@ -70,6 +70,18 @@ class_name Weapon
 ## 発砲音
 @export var fire_sound: AudioStreamPlayer
 
+## ADS時に動かすノード
+@export var ads_root: Node3D
+
+## 目線へ合わせるアイアンサイト上の位置
+@export var aim_point: Marker3D
+
+## カメラからサイトまでの距離
+@export var ads_distance: float = 0.25
+
+## ADSへの移行速度
+@export var ads_speed: float = 10.0
+
 ## 1秒あたりの発射数
 @export_range(0.1, 30.0, 0.1)
 var fire_rate: float = 10.0
@@ -95,6 +107,8 @@ var is_aiming: bool = false
 var ammo_in_magazine: int
 var reserve_ammo: int
 var animation_player: AnimationPlayer
+var hip_transform: Transform3D
+var ads_transform: Transform3D
 
 signal ammo_changed(
 	ammo_in_magazine: int,
@@ -107,6 +121,7 @@ signal reload_finished
 
 func _ready() -> void:
 	setup_animation_player()
+	setup_ads()
 	
 	if muzzle_flash != null:
 		muzzle_flash.visible = false
@@ -127,6 +142,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	update_camera_recoil(delta)
 	update_recoil(delta)
+	update_ads(delta)
 	
 	fire_cooldown = maxf(
 		fire_cooldown - delta,
@@ -445,4 +461,55 @@ func play_reload_animation() -> void:
 		reload_animation,
 		0.0,
 		playback_speed
+	)
+
+func setup_ads() -> void:
+	if ads_root == null:
+		push_error(
+			"AdsRootが設定されていません: %s"
+			% weapon_name
+		)
+		return
+	
+	if aim_point == null:
+		push_error(
+			"AimPointが設定されていません: %s"
+			% weapon_name
+		)
+		return
+	
+	hip_transform = ads_root.transform
+	
+	var aim_from_root: Transform3D = (
+		ads_root.global_transform.affine_inverse()
+		* aim_point.global_transform
+	)
+	
+	var target_transform := Transform3D(
+		Basis.IDENTITY,
+		Vector3(
+			0.0,
+			0.0,
+			-ads_distance
+		)
+	)
+	
+	ads_transform = (
+		target_transform
+		* aim_from_root.affine_inverse()
+	)
+
+func update_ads(delta: float) -> void:
+	if ads_root == null:
+		return
+	
+	ads_amount = move_toward(
+		ads_amount,
+		1.0 if is_aiming else 0.0,
+		ads_speed * delta
+	)
+	
+	ads_root.transform = hip_transform.interpolate_with(
+		ads_transform,
+		ads_amount
 	)

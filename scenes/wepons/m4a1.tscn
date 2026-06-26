@@ -5,18 +5,20 @@
 [ext_resource type="AudioStream" uid="uid://dnrgmx3hyw2ss" path="res://audios/fire2.mp3" id="4_1c605"]
 [ext_resource type="PackedScene" uid="uid://dw0dykryweb4r" path="res://assets/wepons/viewmodel_m4a1.tscn" id="4_hj8qv"]
 
-[node name="M4A1" type="Node3D" unique_id=1877748843 node_paths=PackedStringArray("viewmodel", "muzzle_flash", "fire_sound")]
+[node name="M4A1" type="Node3D" unique_id=1877748843 node_paths=PackedStringArray("viewmodel", "muzzle_flash", "fire_sound", "ads_root", "aim_point")]
 script = ExtResource("1_hj8qv")
 weapon_name = "M4A1"
 camera_recoil_pitch = -5.0
 camera_recoil_yaw = -5.0
 camera_recoil_max_pitch = -10.0
 camera_recoil_max_yaw = 3.0
-viewmodel = NodePath("viewmodel_m4a1")
+viewmodel = NodePath("AdsRoot/viewmodel_m4a1")
 idle_animation = &"rifle_idle"
 reload_animation = &"rifle_reload"
 muzzle_flash = NodePath("Muzzle/MuzzleFlashVFX")
 fire_sound = NodePath("FireSound")
+ads_root = NodePath("AdsRoot")
+aim_point = NodePath("AdsPoint")
 
 [node name="Muzzle" type="Marker3D" parent="." unique_id=677277098]
 transform = Transform3D(1, 0, 0, 0, 0.9989003, 0.046885207, 0, -0.046885207, 0.9989003, 0.22031203, -0.26055834, -1.5111535)
@@ -36,5 +38,10 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.2,
 [node name="Camera3D" type="Camera3D" parent="." unique_id=585849289]
 fov = 60.0
 
-[node name="viewmodel_m4a1" parent="." unique_id=1853385876 instance=ExtResource("4_hj8qv")]
+[node name="AdsPoint" type="Marker3D" parent="." unique_id=1159687610]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.09, -0.13, -0.2)
+
+[node name="AdsRoot" type="Node3D" parent="." unique_id=147620225]
+
+[node name="viewmodel_m4a1" parent="AdsRoot" unique_id=1853385876 instance=ExtResource("4_hj8qv")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -1.7, 0)

@@ -40,6 +40,8 @@ func _physics_process(_delta: float) -> void:
 	if Input.is_action_just_pressed("reload"):
 		current_weapon.try_reload()
 	
+	current_weapon.is_aiming = Input.is_action_pressed("aim")
+	
 	var wants_to_fire: bool
 	
 	if current_weapon.automatic:
@@ -49,7 +51,6 @@ func _physics_process(_delta: float) -> void:
 	
 	if wants_to_fire:
 		current_weapon.try_fire()
-
 
 func equip(weapon_scene: PackedScene) -> void:
 	if weapon_scene == null:
