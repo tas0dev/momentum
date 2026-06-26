@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bmqgdnnsxhntw" path="res://scripts/wepon.gd" id="1_hj8qv"]
 [ext_resource type="PackedScene" uid="uid://qc65wdr7l7jk" path="res://assets/BinbunVFX/muzzle_flash/effects/wide_flash/wide_flash_06.tscn" id="3_y0xc6"]
 [ext_resource type="AudioStream" uid="uid://dnrgmx3hyw2ss" path="res://audios/fire2.mp3" id="4_1c605"]
-[ext_resource type="PackedScene" uid="uid://rmdi81ug23r0" path="res://assets/charactors/viewmodel_m4a1.blend" id="5_ovj0k"]
+[ext_resource type="PackedScene" uid="uid://dw0dykryweb4r" path="res://assets/wepons/viewmodel_m4a1.tscn" id="4_hj8qv"]
 
 [node name="M4A1" type="Node3D" unique_id=1877748843 node_paths=PackedStringArray("viewmodel", "muzzle_flash", "fire_sound")]
 script = ExtResource("1_hj8qv")
@@ -12,7 +12,7 @@ camera_recoil_pitch = -5.0
 camera_recoil_yaw = -5.0
 camera_recoil_max_pitch = -10.0
 camera_recoil_max_yaw = 3.0
-viewmodel = NodePath("ViewModel")
+viewmodel = NodePath("viewmodel_m4a1")
 idle_animation = &"rifle_idle"
 reload_animation = &"rifle_reload"
 muzzle_flash = NodePath("Muzzle/MuzzleFlashVFX")
@@ -22,7 +22,7 @@ fire_sound = NodePath("FireSound")
 transform = Transform3D(1, 0, 0, 0, 0.9989003, 0.046885207, 0, -0.046885207, 0.9989003, 0.22031203, -0.26055834, -1.5111535)
 
 [node name="MuzzleFlashVFX" parent="Muzzle" unique_id=132982299 instance=ExtResource("3_y0xc6")]
-transform = Transform3D(-2.1855694e-08, 0, 0.5, 0, 0.5, 0, -0.5, 0, -2.1855694e-08, 0, 0, 0)
+transform = Transform3D(-2.1855694e-08, 0, 0.5, 0, 0.5, 0, -0.5, 0, -2.1855694e-08, -0.12723699, 0.025871918, 0.2788477)
 preview = false
 one_shot = true
 autoplay = false
@@ -36,5 +36,5 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.2,
 [node name="Camera3D" type="Camera3D" parent="." unique_id=585849289]
 fov = 60.0
 
-[node name="ViewModel" parent="." unique_id=869008739 instance=ExtResource("5_ovj0k")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.1, -1.7, 0)
+[node name="viewmodel_m4a1" parent="." unique_id=1853385876 instance=ExtResource("4_hj8qv")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -1.7, 0)
