@@ -16,6 +16,10 @@ run/print_header=false
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+CyclopsAutoload="*uid://4siqre3jhe80"
+
 [display]
 
 window/size/mode=2
@@ -26,6 +30,10 @@ window/stretch/aspect="expand"
 
 movie_writer/movie_file="/home/jine/Videos/momentum.avi"
 movie_writer/disable_vsync=true
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/cyclops_level_builder/plugin.cfg")
 
 [global_group]
 

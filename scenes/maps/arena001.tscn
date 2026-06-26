@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://sshelcwnn0bq"]
+
+[ext_resource type="Material" uid="uid://bdd0l6ls5empc" path="res://materials/prototype_textures/materials/grey_material.tres" id="1_doqmg"]
+
+[node name="Arena001" type="Node3D" unique_id=1058594667]
+
+[node name="Floor" type="CSGBox3D" parent="." unique_id=1533169150]
+material_override = ExtResource("1_doqmg")
+size = Vector3(100, 0.1, 100)
+
+[node name="Walls" type="Node3D" parent="." unique_id=1649195150]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Walls" unique_id=1653298603]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+size = Vector3(1, 5, 1)
