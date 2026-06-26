@@ -46,6 +46,15 @@ class_name Weapon
 ## 射撃停止後に中央へ戻る速さ
 @export var camera_recoil_recovery_speed: float = 9.0
 
+## 弾薬数
+@export var magazine_size: int = 30
+
+## 最大予備弾数
+@export var reserve_ammo_max: int = 120
+
+## リロード時間
+@export var reload_time: float = 1.8
+
 ## 銃口の発光
 @export var muzzle_flash: Node3D
 
@@ -56,6 +65,14 @@ class_name Weapon
 @export_range(0.1, 30.0, 0.1)
 var fire_rate: float = 10.0
 
+
+enum WeaponState {
+	IDLE,
+	FIRING,
+	RELOADING,
+	EQUIPPING
+}
+
 var rest_position: Vector3
 var rest_rotation: Vector3
 var fire_cooldown: float = 0.0
@@ -63,15 +80,35 @@ var camera_recoil_target: Vector2 = Vector2.ZERO
 var camera_recoil_current: Vector2 = Vector2.ZERO
 var camera_recoil_node: Node3D
 var shoot_ray: RayCast3D
+var state: WeaponState = WeaponState.IDLE
+var ads_amount: float = 0.0
+var is_aiming: bool = false
+var ammo_in_magazine: int
+var reserve_ammo: int
+
+signal ammo_changed(
+	ammo_in_magazine: int,
+	reserve_ammo: int
+)
 
 signal hit_confirmed
+signal reload_started
+signal reload_finished
 
 func _ready() -> void:
 	if muzzle_flash != null:
 		muzzle_flash.visible = false
-	
+
 	rest_position = position
 	rest_rotation = rotation
+
+	ammo_in_magazine = magazine_size
+	reserve_ammo = reserve_ammo_max
+
+	ammo_changed.emit(
+		ammo_in_magazine,
+		reserve_ammo
+	)
 
 func _physics_process(delta: float) -> void:
 	update_camera_recoil(delta)
@@ -97,23 +134,31 @@ func setup(
 	)
 
 func try_fire() -> void:
-	if not is_active:
+	if not can_fire():
 		return
-	
-	if fire_cooldown > 0.0:
-		return
-	
+
+	state = WeaponState.FIRING
+
 	fire()
 	fire_cooldown = 1.0 / fire_rate
 
+	state = WeaponState.IDLE
+
 func fire() -> void:
+	ammo_in_magazine -= 1
+	
+	ammo_changed.emit(
+		ammo_in_magazine,
+		reserve_ammo
+	)
+	
 	apply_recoil()
 	apply_camera_recoil()
 	play_fire_effects()
 	
 	if shoot_ray == null:
 		return
-
+	
 	shoot_ray.target_position = Vector3(
 		0.0,
 		0.0,
@@ -149,6 +194,14 @@ func fire() -> void:
 		)
 	
 		hit_confirmed.emit()
+
+func can_fire() -> bool:
+	return (
+		is_active
+		and state == WeaponState.IDLE
+		and fire_cooldown <= 0.0
+		and ammo_in_magazine > 0
+	)
 
 func update_recoil(delta: float) -> void:
 	var weight := clampf(
@@ -267,3 +320,44 @@ func play_fire_effects() -> void:
 			"発砲音が設定されていません。流石にチートです: %s"
 			% weapon_name
 		)
+
+func try_reload() -> void:
+	if not is_active:
+		return
+	
+	if state != WeaponState.IDLE:
+		return
+	
+	if ammo_in_magazine >= magazine_size:
+		return
+	
+	if reserve_ammo <= 0:
+		return
+	
+	state = WeaponState.RELOADING
+	reload_started.emit()
+	
+	await get_tree().create_timer(
+		reload_time
+	).timeout
+	
+	var needed_ammo: int = (
+		magazine_size - ammo_in_magazine
+	)
+	
+	var loaded_ammo: int = mini(
+		needed_ammo,
+		reserve_ammo
+	)
+	
+	ammo_in_magazine += loaded_ammo
+	reserve_ammo -= loaded_ammo
+	
+	state = WeaponState.IDLE
+	
+	ammo_changed.emit(
+		ammo_in_magazine,
+		reserve_ammo
+	)
+	
+	reload_finished.emit()

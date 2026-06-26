@@ -4,11 +4,15 @@
 [ext_resource type="PackedScene" uid="uid://bv267xl07pyi7" path="res://scenes/player/weapon_system.tscn" id="2_ievca"]
 [ext_resource type="PackedScene" uid="uid://b6ea0lqlsl6qu" path="res://scenes/wepons/m4a1.tscn" id="2_rljg1"]
 [ext_resource type="Script" uid="uid://vnlp2ujo1mh2" path="res://scripts/crosshair.gd" id="4_0d6gl"]
+[ext_resource type="Script" uid="uid://cw5uur872o62u" path="res://scripts/ammo.gd" id="4_2n8vn"]
 [ext_resource type="Script" uid="uid://bmuptadfdgc5n" path="res://scripts/hit_marker.gd" id="5_ayj3s"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1yldb"]
 radius = 0.4
 height = 1.8
+
+[sub_resource type="LabelSettings" id="LabelSettings_ayj3s"]
+font_size = 24
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_o5qli"]
 radius = 0.4
@@ -48,6 +52,21 @@ camera_recoil_node = NodePath("../../..")
 shape = SubResource("CapsuleShape3D_1yldb")
 
 [node name="HUD" type="CanvasLayer" parent="." unique_id=1320871449]
+
+[node name="AmmoLabel" type="Label" parent="HUD" unique_id=1151048756 node_paths=PackedStringArray("weapon_system")]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -61.0
+offset_top = -23.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "30 / 120"
+label_settings = SubResource("LabelSettings_ayj3s")
+script = ExtResource("4_2n8vn")
+weapon_system = NodePath("../../Head/JumpMotion/LandingKick/CameraKick/CameraRecoil/Camera3D/WeaponSystem")
 
 [node name="SpeedLabel" type="Label" parent="HUD" unique_id=272011968]
 offset_right = 40.0
