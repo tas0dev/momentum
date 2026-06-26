@@ -1,5 +1,5 @@
 [gd_scene format=3 uid="uid://bd8y4jsfenpr5"]
 
-[ext_resource type="PackedScene" uid="uid://b0xhte8jcj5ng" path="res://assets/charactors/Bot.fbx" id="1_ev6wt"]
+[ext_resource type="PackedScene" uid="uid://b0xhte8jcj5ng" path="res://assets/charactors/bot.fbx" id="1_ev6wt"]
 
 [node name="Bot" unique_id=1229875332 instance=ExtResource("1_ev6wt")]

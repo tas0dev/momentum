@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://db4budfcskbvh"
-path="res://.godot/imported/FirstPersonBot.blend-e96158e364f1a400bf86a604d045c08d.scn"
+uid="uid://d3sahql5j70ld"
+path="res://.godot/imported/viewmodel_template.blend-12a2caf14f21aacd62e9f297bf0268e8.scn"
 
 [deps]
 
-source_file="res://assets/charactors/FirstPersonBot.blend"
-dest_files=["res://.godot/imported/FirstPersonBot.blend-e96158e364f1a400bf86a604d045c08d.scn"]
+source_file="res://assets/charactors/viewmodel_template.blend"
+dest_files=["res://.godot/imported/viewmodel_template.blend-12a2caf14f21aacd62e9f297bf0268e8.scn"]
 
 [params]
 

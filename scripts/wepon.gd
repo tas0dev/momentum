@@ -55,8 +55,8 @@ class_name Weapon
 ## リロード時間
 @export var reload_time: float = 1.8
 
-## アニメーションプレイヤーを指定
-@export var animation_player: AnimationPlayer
+## ビューモデルを指定（銃と腕どっちも含む）
+@export var viewmodel: Node3D
 
 ## Idleアニメーション（ループ有効にしてください）
 @export var idle_animation: StringName = &"idle"
@@ -94,6 +94,7 @@ var ads_amount: float = 0.0
 var is_aiming: bool = false
 var ammo_in_magazine: int
 var reserve_ammo: int
+var animation_player: AnimationPlayer
 
 signal ammo_changed(
 	ammo_in_magazine: int,
@@ -105,6 +106,8 @@ signal reload_started
 signal reload_finished
 
 func _ready() -> void:
+	setup_animation_player()
+	
 	if muzzle_flash != null:
 		muzzle_flash.visible = false
 	
@@ -119,11 +122,7 @@ func _ready() -> void:
 		reserve_ammo
 	)
 	
-	if (
-		animation_player != null
-		and animation_player.has_animation(idle_animation)
-	):
-		animation_player.play(idle_animation)
+	play_idle_animation()
 
 func _physics_process(delta: float) -> void:
 	update_camera_recoil(delta)
@@ -351,7 +350,9 @@ func try_reload() -> void:
 	
 	state = WeaponState.RELOADING
 	reload_started.emit()
-	
+
+	play_reload_animation()
+
 	await get_tree().create_timer(
 		reload_time
 	).timeout
@@ -376,9 +377,72 @@ func try_reload() -> void:
 	)
 	
 	reload_finished.emit()
+	play_idle_animation()
+
+func setup_animation_player() -> void:
+	if viewmodel == null:
+		push_error(
+			"ViewModelが設定されていません: %s"
+			% weapon_name
+		)
+		return
 	
-	if (
-		animation_player != null
-		and animation_player.has_animation(idle_animation)
+	animation_player = viewmodel.find_child(
+		"AnimationPlayer",
+		true,
+		false
+	) as AnimationPlayer
+	
+	if animation_player == null:
+		push_error(
+			"ViewModel内にAnimationPlayerがありません: %s"
+			% viewmodel.get_path()
+		)
+
+func play_idle_animation() -> void:
+	if animation_player == null:
+		return
+
+	if not animation_player.has_animation(
+		idle_animation
 	):
-		animation_player.play(idle_animation)
+		push_error(
+			"idleアニメーションがありません: %s"
+			% idle_animation
+		)
+		return
+
+	animation_player.play(
+		idle_animation
+	)
+
+
+func play_reload_animation() -> void:
+	if animation_player == null:
+		return
+
+	if not animation_player.has_animation(
+		reload_animation
+	):
+		push_error(
+			"リロードアニメーションがありません: %s"
+			% reload_animation
+		)
+		return
+
+	var animation: Animation = (
+		animation_player.get_animation(
+			reload_animation
+		)
+	)
+
+	var playback_speed: float = (
+		animation.length
+		/ maxf(reload_time, 0.001)
+	)
+
+	animation_player.play(
+		reload_animation,
+		0.0,
+		playback_speed
+	)

@@ -1,26 +1,25 @@
 [gd_scene format=3 uid="uid://b6ea0lqlsl6qu"]
 
 [ext_resource type="Script" uid="uid://bmqgdnnsxhntw" path="res://scripts/wepon.gd" id="1_hj8qv"]
-[ext_resource type="PackedScene" uid="uid://cibt0w40enr7n" path="res://assets/wepons/m4a1.tscn" id="2_ovj0k"]
 [ext_resource type="PackedScene" uid="uid://qc65wdr7l7jk" path="res://assets/BinbunVFX/muzzle_flash/effects/wide_flash/wide_flash_06.tscn" id="3_y0xc6"]
 [ext_resource type="AudioStream" uid="uid://dnrgmx3hyw2ss" path="res://audios/fire2.mp3" id="4_1c605"]
-[ext_resource type="PackedScene" uid="uid://dtu2lw8rxirdj" path="res://scenes/charactors/arms_view_model.tscn" id="5_ovj0k"]
+[ext_resource type="PackedScene" uid="uid://rmdi81ug23r0" path="res://assets/charactors/viewmodel_m4a1.blend" id="5_ovj0k"]
 
-[node name="M4A1" type="Node3D" unique_id=1877748843 node_paths=PackedStringArray("muzzle_flash", "fire_sound")]
+[node name="M4A1" type="Node3D" unique_id=1877748843 node_paths=PackedStringArray("viewmodel", "muzzle_flash", "fire_sound")]
 script = ExtResource("1_hj8qv")
 weapon_name = "M4A1"
 camera_recoil_pitch = -5.0
 camera_recoil_yaw = -5.0
 camera_recoil_max_pitch = -10.0
 camera_recoil_max_yaw = 3.0
+viewmodel = NodePath("ViewModel")
+idle_animation = &"rifle_idle"
+reload_animation = &"rifle_reload"
 muzzle_flash = NodePath("Muzzle/MuzzleFlashVFX")
 fire_sound = NodePath("FireSound")
 
-[node name="Model" parent="." unique_id=945268203 instance=ExtResource("2_ovj0k")]
-transform = Transform3D(1.5, 0, 0, 0, 1.4983504, 0.07032781, 0, -0.07032781, 1.4983504, 0.2860689, -0.317088, -0.79533744)
-
 [node name="Muzzle" type="Marker3D" parent="." unique_id=677277098]
-transform = Transform3D(1, 0, 0, 0, 0.9989003, 0.046885207, 0, -0.046885207, 0.9989003, 0.2860689, -0.30063105, -1.5111535)
+transform = Transform3D(1, 0, 0, 0, 0.9989003, 0.046885207, 0, -0.046885207, 0.9989003, 0.22031203, -0.26055834, -1.5111535)
 
 [node name="MuzzleFlashVFX" parent="Muzzle" unique_id=132982299 instance=ExtResource("3_y0xc6")]
 transform = Transform3D(-2.1855694e-08, 0, 0.5, 0, 0.5, 0, -0.5, 0, -2.1855694e-08, 0, 0, 0)
@@ -34,9 +33,8 @@ stream = ExtResource("4_1c605")
 [node name="ArmsOffSet" type="Node3D" parent="." unique_id=467815327]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.2, -1.7525061, -0.16831082)
 
-[node name="ArmsViewmodel" parent="ArmsOffSet" unique_id=2042829878 instance=ExtResource("5_ovj0k")]
-
 [node name="Camera3D" type="Camera3D" parent="." unique_id=585849289]
 fov = 60.0
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=721789701]
+[node name="ViewModel" parent="." unique_id=869008739 instance=ExtResource("5_ovj0k")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.1, -1.7, 0)
