@@ -55,6 +55,15 @@ class_name Weapon
 ## リロード時間
 @export var reload_time: float = 1.8
 
+## アニメーションプレイヤーを指定
+@export var animation_player: AnimationPlayer
+
+## Idleアニメーション（ループ有効にしてください）
+@export var idle_animation: StringName = &"idle"
+
+## リロードアニメーション（ループ向こうにしてください）
+@export var reload_animation: StringName = &"reload"
+
 ## 銃口の発光
 @export var muzzle_flash: Node3D
 
@@ -98,17 +107,23 @@ signal reload_finished
 func _ready() -> void:
 	if muzzle_flash != null:
 		muzzle_flash.visible = false
-
+	
 	rest_position = position
 	rest_rotation = rotation
-
+	
 	ammo_in_magazine = magazine_size
 	reserve_ammo = reserve_ammo_max
-
+	
 	ammo_changed.emit(
 		ammo_in_magazine,
 		reserve_ammo
 	)
+	
+	if (
+		animation_player != null
+		and animation_player.has_animation(idle_animation)
+	):
+		animation_player.play(idle_animation)
 
 func _physics_process(delta: float) -> void:
 	update_camera_recoil(delta)
@@ -361,3 +376,9 @@ func try_reload() -> void:
 	)
 	
 	reload_finished.emit()
+	
+	if (
+		animation_player != null
+		and animation_player.has_animation(idle_animation)
+	):
+		animation_player.play(idle_animation)
