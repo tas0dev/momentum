@@ -107,6 +107,7 @@ var animation_player: AnimationPlayer
 var hip_transform: Transform3D
 var ads_transform: Transform3D
 var current_scope: ScopeAttachment
+var was_ads_idle_stopped: bool = false
 
 signal ammo_changed(
 	ammo_in_magazine: int,
@@ -518,6 +519,11 @@ func update_ads(delta: float) -> void:
 		ads_transform,
 		ads_amount
 	)
+	
+	if state == WeaponState.IDLE and ads_amount > 0.01:
+		stop_idle_animation()
+	elif not is_aiming and state == WeaponState.IDLE:
+		resume_idle_animation()
 
 func get_active_aim_point() -> Marker3D:
 	if current_scope == null:
@@ -535,6 +541,28 @@ func get_active_aim_point() -> Marker3D:
 
 	return null
 
+func stop_idle_animation() -> void:
+	if was_ads_idle_stopped:
+		return
+	
+	if animation_player == null:
+		return
+	
+	if animation_player.current_animation != idle_animation:
+		return
+	
+	animation_player.stop()
+	was_ads_idle_stopped = true
+
+func resume_idle_animation() -> void:
+	if not was_ads_idle_stopped:
+		return
+	
+	if animation_player == null:
+		return
+	
+	play_idle_animation()
+	was_ads_idle_stopped = false
 
 func get_active_ads_distance() -> float:
 	if current_scope == null:
