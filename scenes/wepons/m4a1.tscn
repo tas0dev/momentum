@@ -1,11 +1,13 @@
 [gd_scene format=3 uid="uid://b6ea0lqlsl6qu"]
 
 [ext_resource type="Script" uid="uid://bmqgdnnsxhntw" path="res://scripts/wepon.gd" id="1_hj8qv"]
+[ext_resource type="Resource" uid="uid://c7qx8vr1rsjxg" path="res://assets/wepons/attachments/iron_sight.tres" id="2_ovj0k"]
+[ext_resource type="Script" uid="uid://crlxvvaailp81" path="res://scripts/attachments/scope.gd" id="3_1c605"]
 [ext_resource type="PackedScene" uid="uid://qc65wdr7l7jk" path="res://assets/BinbunVFX/muzzle_flash/effects/wide_flash/wide_flash_06.tscn" id="3_y0xc6"]
 [ext_resource type="AudioStream" uid="uid://dnrgmx3hyw2ss" path="res://audios/fire2.mp3" id="4_1c605"]
 [ext_resource type="PackedScene" uid="uid://dw0dykryweb4r" path="res://assets/wepons/viewmodel_m4a1.tscn" id="4_hj8qv"]
 
-[node name="M4A1" type="Node3D" unique_id=1877748843 node_paths=PackedStringArray("viewmodel", "muzzle_flash", "fire_sound", "ads_root", "aim_point")]
+[node name="M4A1" type="Node3D" unique_id=1877748843 node_paths=PackedStringArray("viewmodel", "muzzle_flash", "fire_sound", "ads_root")]
 script = ExtResource("1_hj8qv")
 weapon_name = "M4A1"
 camera_recoil_pitch = -5.0
@@ -18,7 +20,8 @@ reload_animation = &"rifle_reload"
 muzzle_flash = NodePath("Muzzle/MuzzleFlashVFX")
 fire_sound = NodePath("FireSound")
 ads_root = NodePath("AdsRoot")
-aim_point = NodePath("AdsPoint")
+default_scope = ExtResource("2_ovj0k")
+available_scopes = Array[ExtResource("3_1c605")]([ExtResource("2_ovj0k")])
 
 [node name="Muzzle" type="Marker3D" parent="." unique_id=677277098]
 transform = Transform3D(1, 0, 0, 0, 0.9989003, 0.046885207, 0, -0.046885207, 0.9989003, 0.22031203, -0.26055834, -1.5111535)
@@ -38,8 +41,10 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.2,
 [node name="Camera3D" type="Camera3D" parent="." unique_id=585849289]
 fov = 60.0
 
-[node name="AdsPoint" type="Marker3D" parent="." unique_id=1159687610]
+[node name="AimPoints" type="Node3D" parent="." unique_id=17947525]
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.09, -0.13, -0.2)
+
+[node name="IronSightMarker" type="Marker3D" parent="AimPoints" unique_id=1000419963]
 
 [node name="AdsRoot" type="Node3D" parent="." unique_id=147620225]
 

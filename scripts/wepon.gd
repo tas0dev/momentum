@@ -73,14 +73,11 @@ class_name Weapon
 ## ADS時に動かすノード
 @export var ads_root: Node3D
 
-## 目線へ合わせるアイアンサイト上の位置
-@export var aim_point: Marker3D
+## デフォルトスコープ
+@export var default_scope: ScopeAttachment
 
-## カメラからサイトまでの距離
-@export var ads_distance: float = 0.25
-
-## ADSへの移行速度
-@export var ads_speed: float = 10.0
+## 付けれるスコープ
+@export var available_scopes: Array[ScopeAttachment] = []
 
 ## 1秒あたりの発射数
 @export_range(0.1, 30.0, 0.1)
@@ -109,6 +106,7 @@ var reserve_ammo: int
 var animation_player: AnimationPlayer
 var hip_transform: Transform3D
 var ads_transform: Transform3D
+var current_scope: ScopeAttachment
 
 signal ammo_changed(
 	ammo_in_magazine: int,
@@ -120,6 +118,8 @@ signal reload_started
 signal reload_finished
 
 func _ready() -> void:
+	current_scope = default_scope
+	
 	setup_animation_player()
 	setup_ads()
 	
@@ -471,18 +471,22 @@ func setup_ads() -> void:
 		)
 		return
 	
-	if aim_point == null:
+	hip_transform = ads_root.transform
+	
+	var active_aim_point: Marker3D = get_active_aim_point()
+	
+	if active_aim_point == null:
 		push_error(
 			"AimPointが設定されていません: %s"
 			% weapon_name
 		)
 		return
 	
-	hip_transform = ads_root.transform
+	var active_ads_distance: float = get_active_ads_distance()
 	
 	var aim_from_root: Transform3D = (
 		ads_root.global_transform.affine_inverse()
-		* aim_point.global_transform
+		* active_aim_point.global_transform
 	)
 	
 	var target_transform := Transform3D(
@@ -490,7 +494,7 @@ func setup_ads() -> void:
 		Vector3(
 			0.0,
 			0.0,
-			-ads_distance
+			-active_ads_distance
 		)
 	)
 	
@@ -501,15 +505,50 @@ func setup_ads() -> void:
 
 func update_ads(delta: float) -> void:
 	if ads_root == null:
+		print("ads_root is null")
 		return
 	
 	ads_amount = move_toward(
 		ads_amount,
 		1.0 if is_aiming else 0.0,
-		ads_speed * delta
+		get_active_ads_speed() * delta
 	)
 	
 	ads_root.transform = hip_transform.interpolate_with(
 		ads_transform,
 		ads_amount
 	)
+
+func get_active_aim_point() -> Marker3D:
+	if current_scope == null:
+		return null
+
+	if current_scope.aim_point_path == NodePath(""):
+		return null
+
+	var node := get_node_or_null(
+		current_scope.aim_point_path
+	)
+
+	if node is Marker3D:
+		return node
+
+	return null
+
+
+func get_active_ads_distance() -> float:
+	if current_scope == null:
+		return 0.25
+
+	return current_scope.ads_distance
+
+
+func get_active_ads_speed() -> float:
+	if current_scope == null:
+		return 10.0
+	
+	return current_scope.ads_speed
+
+func equip_scope(scope: ScopeAttachment) -> void:
+	current_scope = scope
+	setup_ads()

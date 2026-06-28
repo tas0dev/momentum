@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="ScopeAttachment" format=3 uid="uid://c7qx8vr1rsjxg"]
+
+[ext_resource type="Script" uid="uid://crlxvvaailp81" path="res://scripts/attachments/scope.gd" id="1_m8lkl"]
+
+[resource]
+script = ExtResource("1_m8lkl")
+aim_point_path = NodePath("AimPoints/IronSightMarker")
+metadata/_custom_type_script = "uid://crlxvvaailp81"

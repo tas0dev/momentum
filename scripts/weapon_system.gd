@@ -80,13 +80,6 @@ func equip(weapon_scene: PackedScene) -> void:
 	
 	connect_hit_marker(current_weapon)
 	
-	current_weapon.setup(
-		shoot_ray,
-		camera_recoil_node
-	)
-	
-	connect_hit_marker(current_weapon)
-	
 	current_weapon_changed.emit(
 		current_weapon
 	)
