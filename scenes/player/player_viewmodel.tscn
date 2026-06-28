@@ -44,9 +44,10 @@ fov = 110.0
 target_position = Vector3(0, -1, -200)
 collide_with_areas = true
 
-[node name="WeaponSystem" parent="Head/JumpMotion/LandingKick/CameraKick/CameraRecoil/Camera3D" unique_id=1488599352 node_paths=PackedStringArray("camera_recoil_node") instance=ExtResource("2_ievca")]
+[node name="WeaponSystem" parent="Head/JumpMotion/LandingKick/CameraKick/CameraRecoil/Camera3D" unique_id=1488599352 node_paths=PackedStringArray("camera_recoil_node", "player_camera") instance=ExtResource("2_ievca")]
 starting_weapon = ExtResource("2_rljg1")
 camera_recoil_node = NodePath("../../..")
+player_camera = NodePath("..")
 
 [node name="StandingCollider" type="CollisionShape3D" parent="." unique_id=1099980186]
 shape = SubResource("CapsuleShape3D_1yldb")

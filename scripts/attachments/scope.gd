@@ -27,3 +27,6 @@ class_name ScopeAttachment
 
 ## ADS時のビューモデル揺れ倍率
 @export var sway_multiplier: float = 1.0
+
+## スコープのモデル
+@export var scope_scene: PackedScene

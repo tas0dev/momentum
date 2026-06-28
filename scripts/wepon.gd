@@ -79,6 +79,12 @@ class_name Weapon
 ## 付けれるスコープ
 @export var available_scopes: Array[ScopeAttachment] = []
 
+## スコープをつけるNode
+@export var scope_socket: Node3D
+
+## プレイヤーカメラ
+var player_camera: Camera3D
+
 ## 1秒あたりの発射数
 @export_range(0.1, 30.0, 0.1)
 var fire_rate: float = 10.0
@@ -108,6 +114,7 @@ var hip_transform: Transform3D
 var ads_transform: Transform3D
 var current_scope: ScopeAttachment
 var was_ads_idle_stopped: bool = false
+var current_scope_model: Node3D
 
 signal ammo_changed(
 	ammo_in_magazine: int,
@@ -119,9 +126,12 @@ signal reload_started
 signal reload_finished
 
 func _ready() -> void:
-	current_scope = default_scope
-	
 	setup_animation_player()
+	equip_scope(default_scope)
+	
+	if muzzle_flash != null:
+		muzzle_flash.visible = false
+	
 	setup_ads()
 	
 	if muzzle_flash != null:
@@ -152,11 +162,13 @@ func _physics_process(delta: float) -> void:
 
 func setup(
 	ray: RayCast3D,
-	recoil_node: Node3D
+	recoil_node: Node3D,
+	camera: Camera3D
 ) -> void:
 	shoot_ray = ray
 	camera_recoil_node = recoil_node
-
+	player_camera = camera
+	
 	shoot_ray.enabled = true
 	shoot_ray.target_position = Vector3(
 		0.0,
@@ -520,10 +532,12 @@ func update_ads(delta: float) -> void:
 		ads_amount
 	)
 	
-	if state == WeaponState.IDLE and ads_amount > 0.01:
-		stop_idle_animation()
-	elif not is_aiming and state == WeaponState.IDLE:
-		resume_idle_animation()
+	if player_camera != null:
+		player_camera.fov = lerpf(
+			get_active_hip_fov(),
+			get_active_ads_fov(),
+			ads_amount
+		)
 
 func get_active_aim_point() -> Marker3D:
 	if current_scope == null:
@@ -579,4 +593,40 @@ func get_active_ads_speed() -> float:
 
 func equip_scope(scope: ScopeAttachment) -> void:
 	current_scope = scope
+
+	if current_scope_model != null:
+		current_scope_model.queue_free()
+		current_scope_model = null
+
+	if (
+		scope_socket != null
+		and current_scope != null
+		and current_scope.scope_scene != null
+	):
+		var instance := current_scope.scope_scene.instantiate()
+
+		if instance is Node3D:
+			current_scope_model = instance
+			scope_socket.add_child(current_scope_model)
+			current_scope_model.transform = Transform3D.IDENTITY
+		else:
+			instance.queue_free()
+			push_error(
+				"ScopeSceneのルートがNode3Dではありません: %s"
+				% current_scope.attachment_name
+			)
+
 	setup_ads()
+
+func get_active_hip_fov() -> float:
+	if current_scope == null:
+		return 75.0
+	
+	return current_scope.hip_fov
+
+
+func get_active_ads_fov() -> float:
+	if current_scope == null:
+		return 55.0
+	
+	return current_scope.ads_fov

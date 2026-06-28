@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ScopeAttachment" format=3 uid="uid://cemi51ef5iwhq"]
+
+[ext_resource type="Script" uid="uid://crlxvvaailp81" path="res://scripts/attachments/scope.gd" id="1_crtmv"]
+[ext_resource type="PackedScene" uid="uid://tjg3ws84584x" path="res://assets/wepons/attachments/models/2x_rounded_scope.blend" id="1_ihnml"]
+
+[resource]
+script = ExtResource("1_crtmv")
+attachment_name = "x2 Rounded Sight"
+aim_point_path = NodePath("AimPoints/2xRoundedSightMarker")
+ads_fov = 38.0
+recoil_multiplier = 0.5
+sway_multiplier = 0.2
+scope_scene = ExtResource("1_ihnml")
+metadata/_custom_type_script = "uid://crlxvvaailp81"

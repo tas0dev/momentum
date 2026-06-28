@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://qc65wdr7l7jk" path="res://assets/BinbunVFX/muzzle_flash/effects/wide_flash/wide_flash_06.tscn" id="3_y0xc6"]
 [ext_resource type="AudioStream" uid="uid://dnrgmx3hyw2ss" path="res://audios/fire2.mp3" id="4_1c605"]
 [ext_resource type="PackedScene" uid="uid://dw0dykryweb4r" path="res://assets/wepons/viewmodel_m4a1.tscn" id="4_hj8qv"]
+[ext_resource type="Resource" uid="uid://cemi51ef5iwhq" path="res://assets/wepons/attachments/2x_rounded_sight.tres" id="4_lk80m"]
 
 [node name="M4A1" type="Node3D" unique_id=1877748843 node_paths=PackedStringArray("viewmodel", "muzzle_flash", "fire_sound", "ads_root")]
 script = ExtResource("1_hj8qv")
@@ -20,8 +21,8 @@ reload_animation = &"rifle_reload"
 muzzle_flash = NodePath("Muzzle/MuzzleFlashVFX")
 fire_sound = NodePath("FireSound")
 ads_root = NodePath("AdsRoot")
-default_scope = ExtResource("2_ovj0k")
-available_scopes = Array[ExtResource("3_1c605")]([ExtResource("2_ovj0k")])
+default_scope = ExtResource("4_lk80m")
+available_scopes = Array[ExtResource("3_1c605")]([ExtResource("2_ovj0k"), ExtResource("4_lk80m")])
 
 [node name="Muzzle" type="Marker3D" parent="." unique_id=677277098]
 transform = Transform3D(1, 0, 0, 0, 0.9989003, 0.046885207, 0, -0.046885207, 0.9989003, 0.22031203, -0.26055834, -1.5111535)
@@ -47,7 +48,13 @@ transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.09
 [node name="IronSightMarker" type="Marker3D" parent="AimPoints" unique_id=1000419963]
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, -0.002, 0.06)
 
+[node name="2xRoundedSightMarker" type="Marker3D" parent="AimPoints" unique_id=1260775102]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, -0.002, 0.06)
+
 [node name="AdsRoot" type="Node3D" parent="." unique_id=147620225]
 
 [node name="viewmodel_m4a1" parent="AdsRoot" unique_id=1853385876 instance=ExtResource("4_hj8qv")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -1.7, 0)
+
+[node name="ScopeSocket" type="Node3D" parent="AdsRoot" unique_id=16198622]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09, -0.17, -0.4)

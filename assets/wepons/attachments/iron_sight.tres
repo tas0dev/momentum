@@ -6,4 +6,6 @@
 script = ExtResource("1_m8lkl")
 aim_point_path = NodePath("AimPoints/IronSightMarker")
 ads_distance = 0.1
+ads_speed = 7.5
+sway_multiplier = 0.3
 metadata/_custom_type_script = "uid://crlxvvaailp81"

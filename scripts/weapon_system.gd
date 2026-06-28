@@ -3,6 +3,7 @@ class_name WeaponSystem
 
 @export var starting_weapon: PackedScene
 @export var camera_recoil_node: Node3D
+@export var player_camera: Camera3D
 
 @onready var viewmodel_socket: Node3D = %ViewModelSocket
 @onready var shoot_ray: RayCast3D = %ShootRay
@@ -75,7 +76,8 @@ func equip(weapon_scene: PackedScene) -> void:
 	
 	current_weapon.setup(
 		shoot_ray,
-		camera_recoil_node
+		camera_recoil_node,
+		player_camera
 	)
 	
 	connect_hit_marker(current_weapon)
