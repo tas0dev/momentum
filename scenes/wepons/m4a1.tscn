@@ -7,6 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://dnrgmx3hyw2ss" path="res://audios/fire2.mp3" id="4_1c605"]
 [ext_resource type="PackedScene" uid="uid://dw0dykryweb4r" path="res://assets/wepons/viewmodel_m4a1.tscn" id="4_hj8qv"]
 [ext_resource type="Resource" uid="uid://cemi51ef5iwhq" path="res://assets/wepons/attachments/2x_rounded_sight.tres" id="4_lk80m"]
+[ext_resource type="PackedScene" uid="uid://dnpajl7hs0q5g" path="res://scenes/props/bullet_impact.tscn" id="5_lk80m"]
 
 [node name="M4A1" type="Node3D" unique_id=1877748843 node_paths=PackedStringArray("viewmodel", "muzzle_flash", "fire_sound", "ads_root", "scope_socket")]
 script = ExtResource("1_hj8qv")
@@ -23,6 +24,7 @@ fire_sound = NodePath("FireSound")
 ads_root = NodePath("AdsRoot")
 default_scope = ExtResource("2_ovj0k")
 available_scopes = Array[ExtResource("3_1c605")]([ExtResource("2_ovj0k"), ExtResource("4_lk80m")])
+bullet_impact_scene = ExtResource("5_lk80m")
 scope_socket = NodePath("AdsRoot/ScopeSocket")
 
 [node name="Muzzle" type="Marker3D" parent="." unique_id=677277098]

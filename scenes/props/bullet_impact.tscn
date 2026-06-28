@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dnpajl7hs0q5g"]
+
+[ext_resource type="Script" uid="uid://p7aim85qfc2f" path="res://scripts/bullet_impact.gd" id="1_38pkn"]
+
+[node name="BulletImpact" type="Node3D" unique_id=1804547779]
+script = ExtResource("1_38pkn")
+
+[node name="Decal" type="Decal" parent="." unique_id=1957572316]
+size = Vector3(0.12, 0.03, 0.12)
+upper_fade = 0.0
+lower_fade = 0.0

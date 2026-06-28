@@ -79,6 +79,9 @@ class_name Weapon
 ## 付けれるスコープ
 @export var available_scopes: Array[ScopeAttachment] = []
 
+## 着弾地点に生成する弾痕シーン
+@export var bullet_impact_scene: PackedScene
+
 ## スコープをつけるNode
 @export var scope_socket: Node3D
 
@@ -259,6 +262,16 @@ func fire() -> void:
 	var collider: Object = shoot_ray.get_collider()
 	var hit_position: Vector3 = (
 		shoot_ray.get_collision_point()
+	)
+	
+	var hit_normal: Vector3 = (
+		shoot_ray.get_collision_normal()
+	)
+	
+	spawn_bullet_impact(
+		hit_position,
+		hit_normal,
+		collider
 	)
 	
 	print(
@@ -766,3 +779,38 @@ func consume_recoil_pattern() -> Vector2:
 	)
 	
 	return recoil_step
+
+func spawn_bullet_impact(
+	hit_position: Vector3,
+	hit_normal: Vector3,
+	collider: Object
+) -> void:
+	if bullet_impact_scene == null:
+		return
+	
+	var instance := bullet_impact_scene.instantiate()
+	
+	if not instance is Node3D:
+		push_error(
+			"BulletImpactシーンのルートがNode3Dではありません"
+		)
+	
+		instance.queue_free()
+		return
+	
+	var impact := instance as Node3D
+	var parent: Node = get_tree().current_scene
+	
+	if collider is Node3D:
+		parent = collider as Node3D
+	
+	parent.add_child(impact)
+	
+	if impact.has_method("setup"):
+		impact.call(
+			"setup",
+			hit_position,
+			hit_normal
+		)
+	else:
+		impact.global_position = hit_position
