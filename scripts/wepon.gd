@@ -82,6 +82,41 @@ class_name Weapon
 ## スコープをつけるNode
 @export var scope_socket: Node3D
 
+## 発射順に適用するリコイルパターン
+## X: 左右方向。マイナスで左、プラスで右
+## Y: 上方向。1.0で基本反動と同じ強さ
+@export var recoil_pattern: Array[Vector2] = [
+	Vector2(0.00, 1.00),
+	Vector2(0.15, 1.00),
+	Vector2(0.35, 1.05),
+	Vector2(0.55, 1.05),
+	Vector2(0.40, 1.00),
+	Vector2(0.10, 0.95),
+	Vector2(-0.25, 0.95),
+	Vector2(-0.55, 0.90),
+	Vector2(-0.75, 0.90),
+	Vector2(-0.55, 0.85),
+	Vector2(-0.20, 0.85),
+	Vector2(0.20, 0.85),
+	Vector2(0.55, 0.80),
+	Vector2(0.75, 0.80),
+	Vector2(0.50, 0.80),
+	Vector2(0.10, 0.75),
+	Vector2(-0.35, 0.75),
+	Vector2(-0.65, 0.75),
+	Vector2(-0.40, 0.70),
+	Vector2(0.00, 0.70)
+]
+
+## 射撃を止めてからパターンを先頭へ戻すまでの時間
+@export var recoil_pattern_reset_time: float = 0.25
+
+## パターンに加えるランダムな誤差
+@export var recoil_pattern_randomness: Vector2 = Vector2(
+	0.05,
+	0.03
+)
+
 ## プレイヤーカメラ
 var player_camera: Camera3D
 
@@ -115,6 +150,8 @@ var ads_transform: Transform3D
 var current_scope: ScopeAttachment
 var was_ads_idle_stopped: bool = false
 var current_scope_model: Node3D
+var recoil_pattern_index: int = 0
+var recoil_pattern_reset_timer: float = 0.0
 
 signal ammo_changed(
 	ammo_in_magazine: int,
@@ -127,13 +164,15 @@ signal reload_finished
 
 func _ready() -> void:
 	setup_animation_player()
-	equip_scope(default_scope)
-	
-	if muzzle_flash != null:
-		muzzle_flash.visible = false
-	
-	setup_ads()
-	
+
+	if default_scope != null:
+		equip_scope(default_scope)
+	else:
+		push_error(
+			"Default Scopeが設定されていません: %s"
+			% weapon_name
+		)
+
 	if muzzle_flash != null:
 		muzzle_flash.visible = false
 	
@@ -154,6 +193,7 @@ func _physics_process(delta: float) -> void:
 	update_camera_recoil(delta)
 	update_recoil(delta)
 	update_ads(delta)
+	update_recoil_pattern_reset(delta)
 	
 	fire_cooldown = maxf(
 		fire_cooldown - delta,
@@ -195,8 +235,10 @@ func fire() -> void:
 		reserve_ammo
 	)
 	
-	apply_recoil()
-	apply_camera_recoil()
+	var recoil_step := consume_recoil_pattern()
+	
+	apply_recoil(recoil_step)
+	apply_camera_recoil(recoil_step)
 	play_fire_effects()
 	
 	if shoot_ray == null:
@@ -276,13 +318,17 @@ func update_recoil(delta: float) -> void:
 		weight
 	)
 
-func apply_recoil() -> void:
+func apply_recoil(recoil_step: Vector2) -> void:
 	position.z += recoil_back
-
-	rotation_degrees.x -= recoil_pitch
-	rotation_degrees.y += randf_range(
-		-recoil_yaw,
+	
+	rotation_degrees.x -= (
+		recoil_pitch
+		* recoil_step.y
+	)
+	
+	rotation_degrees.y += (
 		recoil_yaw
+		* recoil_step.x
 	)
 
 func update_camera_recoil(delta: float) -> void:
@@ -319,18 +365,36 @@ func update_camera_recoil(delta: float) -> void:
 		camera_recoil_current.y
 	)
 
-func apply_camera_recoil() -> void:
+func apply_camera_recoil(
+	recoil_step: Vector2
+) -> void:
+	var multiplier: float = 1.0
+	
+	if (
+		is_aiming
+		and current_scope != null
+	):
+		multiplier = current_scope.recoil_multiplier
+	
+	var pitch_amount := (
+		camera_recoil_pitch
+		* recoil_step.y
+		* multiplier
+	)
+	
+	var yaw_amount := (
+		camera_recoil_yaw
+		* recoil_step.x
+		* multiplier
+	)
+	
 	camera_recoil_target.x = minf(
-		camera_recoil_target.x + camera_recoil_pitch,
+		camera_recoil_target.x + pitch_amount,
 		camera_recoil_max_pitch
 	)
-
+	
 	camera_recoil_target.y = clampf(
-		camera_recoil_target.y
-		+ randf_range(
-			-camera_recoil_yaw,
-			camera_recoil_yaw
-		),
+		camera_recoil_target.y + yaw_amount,
 		-camera_recoil_max_yaw,
 		camera_recoil_max_yaw
 	)
@@ -592,31 +656,62 @@ func get_active_ads_speed() -> float:
 	return current_scope.ads_speed
 
 func equip_scope(scope: ScopeAttachment) -> void:
+	if scope == null:
+		push_error(
+			"装着するScopeAttachmentがnullです: %s"
+			% weapon_name
+		)
+		return
+	
 	current_scope = scope
-
+	
 	if current_scope_model != null:
 		current_scope_model.queue_free()
 		current_scope_model = null
-
-	if (
-		scope_socket != null
-		and current_scope != null
-		and current_scope.scope_scene != null
-	):
-		var instance := current_scope.scope_scene.instantiate()
-
-		if instance is Node3D:
-			current_scope_model = instance
-			scope_socket.add_child(current_scope_model)
-			current_scope_model.transform = Transform3D.IDENTITY
-		else:
-			instance.queue_free()
-			push_error(
-				"ScopeSceneのルートがNode3Dではありません: %s"
-				% current_scope.attachment_name
-			)
-
+	
+	if scope_socket == null:
+		push_error(
+			"ScopeSocketが設定されていません: %s"
+			% weapon_name
+		)
+		return
+	
+	if current_scope.scope_scene == null:
+		push_warning(
+			"ScopeSceneが設定されていません: %s"
+			% current_scope.attachment_name
+		)
+	
+		setup_ads()
+		return
+	
+	var instance := current_scope.scope_scene.instantiate()
+	
+	if not instance is Node3D:
+		push_error(
+			"ScopeSceneのルートがNode3Dではありません: %s"
+			% current_scope.attachment_name
+		)
+	
+		instance.queue_free()
+		return
+	
+	current_scope_model = instance as Node3D
+	scope_socket.add_child(current_scope_model)
+	
+	current_scope_model.transform = Transform3D.IDENTITY
+	current_scope_model.visible = true
+	
 	setup_ads()
+
+	print(
+		"スコープを装着しました: ",
+		current_scope.attachment_name,
+		" socket=",
+		scope_socket.get_path(),
+		" model=",
+		current_scope_model.get_path()
+	)
 
 func get_active_hip_fov() -> float:
 	if current_scope == null:
@@ -630,3 +725,44 @@ func get_active_ads_fov() -> float:
 		return 55.0
 	
 	return current_scope.ads_fov
+
+func update_recoil_pattern_reset(delta: float) -> void:
+	if recoil_pattern_index == 0:
+		return
+	
+	recoil_pattern_reset_timer = maxf(
+		recoil_pattern_reset_timer - delta,
+		0.0
+	)
+	
+	if recoil_pattern_reset_timer <= 0.0:
+		recoil_pattern_index = 0
+
+func consume_recoil_pattern() -> Vector2:
+	var recoil_step := Vector2(
+		0.0,
+		1.0
+	)
+	
+	if not recoil_pattern.is_empty():
+		var index := mini(
+			recoil_pattern_index,
+			recoil_pattern.size() - 1
+		)
+	
+		recoil_step = recoil_pattern[index]
+	
+	recoil_pattern_index += 1
+	recoil_pattern_reset_timer = recoil_pattern_reset_time
+	
+	recoil_step.x += randf_range(
+		-recoil_pattern_randomness.x,
+		recoil_pattern_randomness.x
+	)
+	
+	recoil_step.y += randf_range(
+		-recoil_pattern_randomness.y,
+		recoil_pattern_randomness.y
+	)
+	
+	return recoil_step

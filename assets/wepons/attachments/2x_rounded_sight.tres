@@ -7,8 +7,9 @@
 script = ExtResource("1_crtmv")
 attachment_name = "x2 Rounded Sight"
 aim_point_path = NodePath("AimPoints/2xRoundedSightMarker")
+ads_distance = 0.1
 ads_fov = 38.0
-recoil_multiplier = 0.5
+recoil_multiplier = 0.4
 sway_multiplier = 0.2
 scope_scene = ExtResource("1_ihnml")
 metadata/_custom_type_script = "uid://crlxvvaailp81"
