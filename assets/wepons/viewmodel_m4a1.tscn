@@ -3,10 +3,17 @@
 [ext_resource type="PackedScene" uid="uid://rmdi81ug23r0" path="res://assets/charactors/viewmodel_m4a1.blend" id="1_5yu28"]
 [ext_resource type="Script" uid="uid://dvv007pms4mlc" path="res://scripts/tools/update_layer.gd" id="2_frq3p"]
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_frq3p"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_frq3p"]
+graph_offset = Vector2(-188.94547, 65.490906)
+nodes/BasePose/node = SubResource("AnimationNodeAnimation_frq3p")
+nodes/BasePose/position = Vector2(-32, 144)
+
 [node name="viewmodel_m4a1" unique_id=363847229 instance=ExtResource("1_5yu28")]
 script = ExtResource("2_frq3p")
 
-[node name="Skeleton3D" parent="ArmsRig" parent_id_path=PackedInt32Array(2068108005) index="0" unique_id=146359606]
+[node name="Skeleton3D" parent="ArmsRig" parent_id_path=PackedInt32Array(836573347) index="0" unique_id=150497143]
 bones/0/position = Vector3(0.44410017, -0.61679816, -95.92252)
 bones/0/rotation = Quaternion(-0.7385416, -0.25994894, 0.2212332, 0.581411)
 bones/1/rotation = Quaternion(0.0089961905, -0.00031722046, -0.0013266911, 0.99995863)
@@ -102,47 +109,51 @@ bones/61/rotation = Quaternion(-0.28616828, 0.004680673, 0.014211054, 0.95806265
 bones/62/rotation = Quaternion(0.67614585, 0.14470229, -0.042336714, 0.7211766)
 bones/63/rotation = Quaternion(0.22788285, 0.032119136, 0.015254734, 0.9730391)
 
-[node name="mixamorig_RightHand" parent="ArmsRig/Skeleton3D" index="0" unique_id=1744228817]
+[node name="mixamorig_RightHand" parent="ArmsRig/Skeleton3D" index="0" unique_id=1981236079]
 transform = Transform3D(-0.10187209, 0.027297355, 0.9944229, -0.10036889, 0.99424046, -0.037574343, -0.9897214, -0.10363668, -0.09854534, -14.315483, 19.117153, -133.1802)
 
-[node name="Base" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root" parent_id_path=PackedInt32Array(900245903) index="0" unique_id=1809486586]
+[node name="Base" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root" parent_id_path=PackedInt32Array(1636046502) index="0" unique_id=678254036]
 layers = 2
 
-[node name="Magazine" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root" parent_id_path=PackedInt32Array(900245903) index="1" unique_id=1563140442]
+[node name="Magazine" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root" parent_id_path=PackedInt32Array(1636046502) index="1" unique_id=1214366930]
 layers = 2
 
-[node name="Barrel" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts" parent_id_path=PackedInt32Array(984412370) index="0" unique_id=703932290]
+[node name="Barrel" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts" parent_id_path=PackedInt32Array(1467934438) index="0" unique_id=908164171]
 layers = 2
 
-[node name="Charging_Handle" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts" parent_id_path=PackedInt32Array(984412370) index="1" unique_id=948318432]
+[node name="Charging_Handle" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts" parent_id_path=PackedInt32Array(1467934438) index="1" unique_id=783266283]
 layers = 2
 
-[node name="Ejector_2" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts/Ejector" parent_id_path=PackedInt32Array(1857869706) index="0" unique_id=375351753]
+[node name="Ejector_2" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts/Ejector" parent_id_path=PackedInt32Array(1238115745) index="0" unique_id=846053650]
 layers = 2
 
-[node name="Ejector_Lid" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts/Ejector" parent_id_path=PackedInt32Array(1857869706) index="1" unique_id=50540364]
+[node name="Ejector_Lid" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts/Ejector" parent_id_path=PackedInt32Array(1238115745) index="1" unique_id=1583541527]
 layers = 2
 
-[node name="Firemode_Selector" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts" parent_id_path=PackedInt32Array(984412370) index="3" unique_id=109396689]
+[node name="Firemode_Selector" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts" parent_id_path=PackedInt32Array(1467934438) index="3" unique_id=2137582263]
 layers = 2
 
-[node name="Sight" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts" parent_id_path=PackedInt32Array(984412370) index="4" unique_id=353849953]
+[node name="Sight" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts" parent_id_path=PackedInt32Array(1467934438) index="4" unique_id=1586287178]
 layers = 2
 
-[node name="Switch1" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts/Sight" index="0" unique_id=2127808515]
+[node name="Switch1" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts/Sight" index="0" unique_id=842150268]
 layers = 2
 
-[node name="Switch2" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts/Sight" index="1" unique_id=394389404]
+[node name="Switch2" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts/Sight" index="1" unique_id=1006752352]
 layers = 2
 
-[node name="Stock" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts" parent_id_path=PackedInt32Array(984412370) index="5" unique_id=2018581853]
+[node name="Stock" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts" parent_id_path=PackedInt32Array(1467934438) index="5" unique_id=1078471793]
 layers = 2
 
-[node name="Trigger" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts" parent_id_path=PackedInt32Array(984412370) index="6" unique_id=1882298736]
+[node name="Trigger" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root/Parts" parent_id_path=PackedInt32Array(1467934438) index="6" unique_id=1306713203]
 layers = 2
 
-[node name="Alpha_Joints" parent="ArmsRig/Skeleton3D" index="1" unique_id=2095344634]
+[node name="Alpha_Joints" parent="ArmsRig/Skeleton3D" index="1" unique_id=1233035843]
 layers = 2
 
-[node name="Alpha_Surface" parent="ArmsRig/Skeleton3D" index="2" unique_id=1021508907]
+[node name="Alpha_Surface" parent="ArmsRig/Skeleton3D" index="2" unique_id=1200843189]
 layers = 2
+
+[node name="AnimationTree" type="AnimationTree" parent="." index="2" unique_id=524583163]
+tree_root = SubResource("AnimationNodeBlendTree_frq3p")
+anim_player = NodePath("../AnimationPlayer")

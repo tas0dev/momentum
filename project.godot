@@ -22,6 +22,7 @@ CyclopsAutoload="*uid://4siqre3jhe80"
 
 [display]
 
+window/size/mode=2
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 

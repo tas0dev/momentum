@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://cfgs3fr6r1f26"]
+
+[ext_resource type="Script" uid="uid://bmqgdnnsxhntw" path="res://scripts/wepon.gd" id="1_8iu24"]
+[ext_resource type="Resource" uid="uid://c7qx8vr1rsjxg" path="res://assets/wepons/attachments/iron_sight.tres" id="2_l6r4x"]
+[ext_resource type="Script" uid="uid://crlxvvaailp81" path="res://scripts/attachments/scope.gd" id="3_qold8"]
+[ext_resource type="Resource" uid="uid://cemi51ef5iwhq" path="res://assets/wepons/attachments/2x_rounded_sight.tres" id="4_mj2g4"]
+[ext_resource type="PackedScene" uid="uid://dnpajl7hs0q5g" path="res://scenes/props/bullet_impact.tscn" id="5_ldbab"]
+[ext_resource type="PackedScene" uid="uid://qc65wdr7l7jk" path="res://assets/BinbunVFX/muzzle_flash/effects/wide_flash/wide_flash_06.tscn" id="6_xdsws"]
+[ext_resource type="AudioStream" uid="uid://dnrgmx3hyw2ss" path="res://audios/fire2.mp3" id="7_7xtgc"]
+[ext_resource type="PackedScene" uid="uid://hhhtbf1tqk1y" path="res://assets/wepons/viewmodel_pistol.tscn" id="9_l6r4x"]
+
+[node name="M4A1" type="Node3D" unique_id=1877748843 node_paths=PackedStringArray("viewmodel", "muzzle_flash", "fire_sound", "ads_root", "scope_socket")]
+script = ExtResource("1_8iu24")
+weapon_name = "Pistol"
+damage = 45.0
+automatic = false
+recoil_pitch = 4.0
+camera_recoil_pitch = -5.0
+camera_recoil_yaw = -5.0
+camera_recoil_max_pitch = -10.0
+camera_recoil_max_yaw = 3.0
+magazine_size = 6
+reserve_ammo_max = 24
+viewmodel = NodePath("AdsRoot/viewmodel_pistol")
+idle_animation = &"rifle_idle"
+reload_animation = &"rifle_reload"
+muzzle_flash = NodePath("Muzzle/MuzzleFlashVFX")
+fire_sound = NodePath("FireSound")
+ads_root = NodePath("AdsRoot")
+default_scope = ExtResource("2_l6r4x")
+available_scopes = Array[ExtResource("3_qold8")]([ExtResource("2_l6r4x"), ExtResource("4_mj2g4")])
+bullet_impact_scene = ExtResource("5_ldbab")
+scope_socket = NodePath("AdsRoot/ScopeSocket")
+
+[node name="Muzzle" type="Marker3D" parent="." unique_id=677277098]
+transform = Transform3D(1, 0, 0, 0, 0.9989003, 0.046885207, 0, -0.046885207, 0.9989003, 0.22031203, -0.26055834, -0.9188708)
+
+[node name="MuzzleFlashVFX" parent="Muzzle" unique_id=132982299 instance=ExtResource("6_xdsws")]
+transform = Transform3D(-2.1855694e-08, 0, 0.5, 0, 0.5, 0, -0.5, 0, -2.1855694e-08, -0.12723699, 0.025871918, 0.2788477)
+preview = false
+one_shot = true
+autoplay = false
+
+[node name="FireSound" type="AudioStreamPlayer" parent="." unique_id=58529143]
+stream = ExtResource("7_7xtgc")
+
+[node name="ArmsOffSet" type="Node3D" parent="." unique_id=467815327]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.2, -1.7525061, -0.16831082)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=585849289]
+fov = 60.0
+
+[node name="AimPoints" type="Node3D" parent="." unique_id=17947525]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0.07615662, -0.17480867, -0.38830477)
+
+[node name="IronSightMarker" type="Marker3D" parent="AimPoints" unique_id=1000419963]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, -0.002, 0.06)
+
+[node name="2xRoundedSightMarker" type="Marker3D" parent="AimPoints" unique_id=1260775102]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, -0.002, 0.06)
+
+[node name="AdsRoot" type="Node3D" parent="." unique_id=147620225]
+
+[node name="ScopeSocket" type="Node3D" parent="AdsRoot" unique_id=16198622]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.09, -0.13406213, -0.4)
+
+[node name="viewmodel_pistol" parent="AdsRoot" unique_id=93119906 instance=ExtResource("9_l6r4x")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.07452321, -2.8914332, 0.3022492)
