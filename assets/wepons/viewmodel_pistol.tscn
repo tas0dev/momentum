@@ -3,10 +3,29 @@
 [ext_resource type="PackedScene" uid="uid://cgwpy1sfhxepj" path="res://assets/charactors/viewmodel_pistol.blend" id="1_p1o2p"]
 [ext_resource type="Script" uid="uid://dvv007pms4mlc" path="res://scripts/tools/update_layer.gd" id="2_5e3yt"]
 
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_5e3yt"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_yd7jo"]
+animation = &"base"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ywv2d"]
+animation = &"rifle_idle"
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_qg6d2"]
+graph_offset = Vector2(-241.5273, 74.8)
+nodes/output/position = Vector2(544, 208)
+nodes/base/node = SubResource("AnimationNodeAnimation_yd7jo")
+nodes/base/position = Vector2(-32, 96)
+nodes/Blend2/node = SubResource("AnimationNodeBlend2_5e3yt")
+nodes/Blend2/position = Vector2(224, 144)
+nodes/idle/node = SubResource("AnimationNodeAnimation_ywv2d")
+nodes/idle/position = Vector2(-32, 288)
+node_connections = [&"output", 0, &"Blend2", &"Blend2", 0, &"base", &"Blend2", 1, &"idle"]
+
 [node name="viewmodel_pistol" unique_id=1850949484 instance=ExtResource("1_p1o2p")]
 script = ExtResource("2_5e3yt")
 
-[node name="Skeleton3D" parent="ArmsRig" parent_id_path=PackedInt32Array(1028266229) index="0" unique_id=693272789]
+[node name="Skeleton3D" parent="ArmsRig" parent_id_path=PackedInt32Array(2146566504) index="0" unique_id=122387657]
 bones/0/position = Vector3(0.44410017, -0.61679816, -95.92252)
 bones/0/rotation = Quaternion(-0.7385416, -0.25994894, 0.2212332, 0.581411)
 bones/1/rotation = Quaternion(0.014585284, 0.24615291, 0.053587243, 0.96763855)
@@ -16,9 +35,9 @@ bones/4/rotation = Quaternion(0.0065361615, 0.065189905, 0.007688963, 0.99782187
 bones/5/rotation = Quaternion(-0.040118467, 0.19220077, 0.09014384, 0.97638285)
 bones/7/rotation = Quaternion(-0.29285738, -0.33378908, 0.6690868, -0.5959382)
 bones/8/position = Vector3(-4.598297e-06, 12.922287, 7.982431e-06)
-bones/8/rotation = Quaternion(0.5729287, -0.075901896, 0.3878931, 0.7180045)
+bones/8/rotation = Quaternion(0.5639426, -0.089845285, 0.4001472, 0.71678376)
 bones/9/position = Vector3(-8.412478e-06, 27.404676, 1.048217e-05)
-bones/9/rotation = Quaternion(0.15753856, -0.009780882, 0.5508616, 0.8195349)
+bones/9/rotation = Quaternion(0.1612195, -0.013840087, 0.54403037, 0.8233151)
 bones/10/rotation = Quaternion(-0.02976251, -0.8211406, -0.11729051, 0.55775017)
 bones/11/position = Vector3(-3.0029767, 3.7888076, 2.167154)
 bones/11/rotation = Quaternion(0.19371244, 0.06883791, 0.39816517, 0.8939807)
@@ -54,9 +73,9 @@ bones/29/rotation = Quaternion(0.12218041, 2.8180077e-05, -0.012292261, 0.992431
 bones/30/position = Vector3(-1.5688104e-06, 2.9238505, 9.122821e-06)
 bones/31/rotation = Quaternion(0.1869321, -0.38781202, 0.72197473, 0.5416741)
 bones/32/position = Vector3(-3.1582451e-06, 12.92229, -8.506722e-07)
-bones/32/rotation = Quaternion(0.44418377, -0.054657325, -0.6595429, 0.60391766)
+bones/32/rotation = Quaternion(0.43844825, -0.033280797, -0.66602075, 0.6025546)
 bones/33/position = Vector3(-1.4405507e-06, 27.404684, -9.250895e-06)
-bones/33/rotation = Quaternion(-0.03376563, 0.06866603, -0.5276837, 0.84598744)
+bones/33/rotation = Quaternion(-0.02569831, 0.07029868, -0.52155006, 0.8499314)
 bones/34/position = Vector3(-2.4591181e-06, 27.61447, -1.0631873e-05)
 bones/34/rotation = Quaternion(-0.17230903, 0.381108, 0.20110479, 0.8857896)
 bones/35/rotation = Quaternion(0.5453036, -0.05922571, -0.026530484, 0.83572274)
@@ -98,32 +117,37 @@ bones/62/rotation = Quaternion(0.67614585, 0.14470229, -0.042336714, 0.7211766)
 bones/63/rotation = Quaternion(0.22788285, 0.032119136, 0.015254734, 0.9730391)
 bones/64/position = Vector3(3.799796e-07, 10, -3.296882e-07)
 
-[node name="mixamorig_RightHand" parent="ArmsRig/Skeleton3D" index="0" unique_id=1452254806]
-transform = Transform3D(-0.103434384, 0.04289884, 0.993711, -0.07471169, 0.9959119, -0.050770357, -0.9918263, -0.07949318, -0.09980646, -9.762534, 38.24759, -136.64664)
+[node name="mixamorig_RightHand" parent="ArmsRig/Skeleton3D" index="0" unique_id=87901114]
+transform = Transform3D(-0.10343447, 0.042898424, 0.99371076, -0.09870001, 0.99369556, -0.05317138, -0.9897269, -0.103579044, -0.098548174, -9.762551, 38.521656, -138.29958)
 
-[node name="Barrel" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/Pistol" parent_id_path=PackedInt32Array(321277556) index="0" unique_id=1092962258]
+[node name="Barrel" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/Pistol" parent_id_path=PackedInt32Array(880859321) index="0" unique_id=1112487583]
 layers = 2
 
-[node name="Body" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/Pistol" parent_id_path=PackedInt32Array(321277556) index="1" unique_id=943552994]
+[node name="Body" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/Pistol" parent_id_path=PackedInt32Array(880859321) index="1" unique_id=123816626]
 layers = 2
 
-[node name="Magazine" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/Pistol" parent_id_path=PackedInt32Array(321277556) index="2" unique_id=980204366]
+[node name="Magazine" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/Pistol" parent_id_path=PackedInt32Array(880859321) index="2" unique_id=574141874]
 layers = 2
 
-[node name="Slide" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/Pistol" parent_id_path=PackedInt32Array(321277556) index="3" unique_id=1066180385]
+[node name="Slide" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/Pistol" parent_id_path=PackedInt32Array(880859321) index="3" unique_id=1475477854]
 layers = 2
 
-[node name="Hammer" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/Pistol/Slide" index="0" unique_id=1674535596]
+[node name="Hammer" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/Pistol/Slide" index="0" unique_id=1451163555]
 layers = 2
 
-[node name="Safety" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/Pistol/Slide" index="1" unique_id=1775891686]
+[node name="Safety" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/Pistol/Slide" index="1" unique_id=1016875760]
 layers = 2
 
-[node name="Trigger" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/Pistol" parent_id_path=PackedInt32Array(321277556) index="4" unique_id=184951160]
+[node name="Trigger" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/Pistol" parent_id_path=PackedInt32Array(880859321) index="4" unique_id=1394989501]
 layers = 2
 
-[node name="Alpha_Joints" parent="ArmsRig/Skeleton3D" index="1" unique_id=1752700509]
+[node name="Alpha_Joints" parent="ArmsRig/Skeleton3D" index="1" unique_id=4309904]
 layers = 2
 
-[node name="Alpha_Surface" parent="ArmsRig/Skeleton3D" index="2" unique_id=1071697694]
+[node name="Alpha_Surface" parent="ArmsRig/Skeleton3D" index="2" unique_id=171926970]
 layers = 2
+
+[node name="AnimationTree" type="AnimationTree" parent="." index="2" unique_id=1845865101]
+tree_root = SubResource("AnimationNodeBlendTree_qg6d2")
+anim_player = NodePath("../AnimationPlayer")
+parameters/Blend2/blend_amount = 1.0
