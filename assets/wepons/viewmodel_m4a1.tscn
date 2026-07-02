@@ -3,12 +3,24 @@
 [ext_resource type="PackedScene" uid="uid://rmdi81ug23r0" path="res://assets/charactors/viewmodel_m4a1.blend" id="1_5yu28"]
 [ext_resource type="Script" uid="uid://dvv007pms4mlc" path="res://scripts/tools/update_layer.gd" id="2_frq3p"]
 
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_frq3p"]
+
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_frq3p"]
+animation = &"base"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ioerq"]
+animation = &"rifle_idle"
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_frq3p"]
-graph_offset = Vector2(-188.94547, 65.490906)
-nodes/BasePose/node = SubResource("AnimationNodeAnimation_frq3p")
-nodes/BasePose/position = Vector2(-32, 144)
+graph_offset = Vector2(-225.35425, 81.11951)
+nodes/output/position = Vector2(544, 240)
+nodes/rifle_base/node = SubResource("AnimationNodeAnimation_frq3p")
+nodes/rifle_base/position = Vector2(-32, 144)
+nodes/rifle_idle/node = SubResource("AnimationNodeAnimation_ioerq")
+nodes/rifle_idle/position = Vector2(-32, 320)
+nodes/SwayBlend/node = SubResource("AnimationNodeBlend2_frq3p")
+nodes/SwayBlend/position = Vector2(256, 176)
+node_connections = [&"output", 0, &"SwayBlend", &"SwayBlend", 0, &"rifle_base", &"SwayBlend", 1, &"rifle_idle"]
 
 [node name="viewmodel_m4a1" unique_id=363847229 instance=ExtResource("1_5yu28")]
 script = ExtResource("2_frq3p")
@@ -23,9 +35,9 @@ bones/4/rotation = Quaternion(0.0065360973, 0.065189905, 0.0076889414, 0.9978218
 bones/5/rotation = Quaternion(-0.040118452, 0.19220074, 0.09014382, 0.97638285)
 bones/7/rotation = Quaternion(-0.29285735, -0.333789, 0.6690868, -0.59593827)
 bones/8/position = Vector3(-1.2205561e-06, 12.922289, -4.279402e-06)
-bones/8/rotation = Quaternion(0.44310823, -0.2472694, 0.34483355, 0.78968525)
+bones/8/rotation = Quaternion(0.4504005, -0.24265948, 0.33852074, 0.78972125)
 bones/9/position = Vector3(-2.6904293e-06, 27.404667, 7.144301e-06)
-bones/9/rotation = Quaternion(0.030930027, -0.03503785, 0.477301, 0.8774961)
+bones/9/rotation = Quaternion(0.02709219, -0.030690279, 0.48493716, 0.8735904)
 bones/10/position = Vector3(-4.1741505e-06, 27.61446, -1.0625137e-05)
 bones/10/rotation = Quaternion(-0.06158213, -0.7998006, -0.16758056, 0.57309985)
 bones/11/position = Vector3(-3.0029645, 3.7888043, 2.167131)
@@ -62,8 +74,8 @@ bones/29/rotation = Quaternion(0.12218044, 2.8169285e-05, -0.0122922575, 0.99243
 bones/30/position = Vector3(-5.768495e-06, 2.9238656, 1.8217532e-05)
 bones/31/rotation = Quaternion(0.18693215, -0.38781196, 0.7219746, 0.54167414)
 bones/32/position = Vector3(-1.453526e-06, 12.922289, -5.4837737e-06)
-bones/32/rotation = Quaternion(0.47276595, -0.17810091, -0.61498904, 0.6054427)
-bones/33/rotation = Quaternion(7.5602344e-08, -3.0434697e-07, -0.7572527, 0.65312207)
+bones/32/rotation = Quaternion(0.4704417, -0.18623728, -0.61299974, 0.606821)
+bones/33/rotation = Quaternion(-0.0052264035, 0.0007557501, -0.76078117, 0.648987)
 bones/34/position = Vector3(8.508136e-06, 27.614466, -1.6592341e-05)
 bones/34/rotation = Quaternion(-0.16011198, 0.38889608, 0.24034697, 0.87484705)
 bones/35/position = Vector3(3.0029676, 3.7888079, 2.167153)
@@ -110,7 +122,7 @@ bones/62/rotation = Quaternion(0.67614585, 0.14470229, -0.042336714, 0.7211766)
 bones/63/rotation = Quaternion(0.22788285, 0.032119136, 0.015254734, 0.9730391)
 
 [node name="mixamorig_RightHand" parent="ArmsRig/Skeleton3D" index="0" unique_id=1981236079]
-transform = Transform3D(-0.10187209, 0.027297355, 0.9944229, -0.10036889, 0.99424046, -0.037574343, -0.9897214, -0.10363668, -0.09854534, -14.315483, 19.117153, -133.1802)
+transform = Transform3D(-0.10187191, 0.02729728, 0.9944229, -0.09794884, 0.99449086, -0.03733342, -0.98996377, -0.10120575, -0.098636955, -14.315484, 18.83729, -132.88821)
 
 [node name="Base" parent="ArmsRig/Skeleton3D/mixamorig_RightHand/M4A1/Root" parent_id_path=PackedInt32Array(1636046502) index="0" unique_id=678254036]
 layers = 2
@@ -157,3 +169,4 @@ layers = 2
 [node name="AnimationTree" type="AnimationTree" parent="." index="2" unique_id=524583163]
 tree_root = SubResource("AnimationNodeBlendTree_frq3p")
 anim_player = NodePath("../AnimationPlayer")
+parameters/SwayBlend/blend_amount = 1.0

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ddqx155cqm1a" path="res://scripts/player.gd" id="1_ievca"]
 [ext_resource type="PackedScene" uid="uid://bv267xl07pyi7" path="res://scenes/player/weapon_system.tscn" id="2_ievca"]
-[ext_resource type="PackedScene" uid="uid://cfgs3fr6r1f26" path="res://scenes/wepons/pistol.tscn" id="3_2n8vn"]
+[ext_resource type="PackedScene" uid="uid://b6ea0lqlsl6qu" path="res://scenes/wepons/m4a1.tscn" id="2_rljg1"]
 [ext_resource type="Script" uid="uid://vnlp2ujo1mh2" path="res://scripts/crosshair.gd" id="4_0d6gl"]
 [ext_resource type="Script" uid="uid://cw5uur872o62u" path="res://scripts/ammo.gd" id="4_2n8vn"]
 [ext_resource type="Script" uid="uid://bmuptadfdgc5n" path="res://scripts/hit_marker.gd" id="5_ayj3s"]
@@ -45,7 +45,7 @@ target_position = Vector3(0, -1, -200)
 collide_with_areas = true
 
 [node name="WeaponSystem" parent="Head/JumpMotion/LandingKick/CameraKick/CameraRecoil/Camera3D" unique_id=1488599352 node_paths=PackedStringArray("camera_recoil_node", "player_camera") instance=ExtResource("2_ievca")]
-starting_weapon = ExtResource("3_2n8vn")
+starting_weapon = ExtResource("2_rljg1")
 camera_recoil_node = NodePath("../../..")
 player_camera = NodePath("..")
 

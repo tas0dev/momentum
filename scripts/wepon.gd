@@ -120,6 +120,11 @@ class_name Weapon
 	0.03
 )
 
+## 揺れ幅の制御に使うパラメーター
+@export var sway_blend_parameter: StringName = (
+	&"parameters/SwayBlend/blend_amount"
+)
+
 ## プレイヤーカメラ
 var player_camera: Camera3D
 
@@ -155,6 +160,7 @@ var was_ads_idle_stopped: bool = false
 var current_scope_model: Node3D
 var recoil_pattern_index: int = 0
 var recoil_pattern_reset_timer: float = 0.0
+var animation_tree: AnimationTree
 
 signal ammo_changed(
 	ammo_in_magazine: int,
@@ -167,7 +173,8 @@ signal reload_finished
 
 func _ready() -> void:
 	setup_animation_player()
-
+	setup_animation_tree()
+	
 	if default_scope != null:
 		equip_scope(default_scope)
 	else:
@@ -175,7 +182,15 @@ func _ready() -> void:
 			"Default Scopeが設定されていません: %s"
 			% weapon_name
 		)
-
+	
+	if default_scope != null:
+		equip_scope(default_scope)
+	else:
+		push_error(
+			"Default Scopeが設定されていません: %s"
+			% weapon_name
+		)
+	
 	if muzzle_flash != null:
 		muzzle_flash.visible = false
 	
@@ -196,6 +211,7 @@ func _physics_process(delta: float) -> void:
 	update_camera_recoil(delta)
 	update_recoil(delta)
 	update_ads(delta)
+	update_sway()
 	update_recoil_pattern_reset(delta)
 	
 	fire_cooldown = maxf(
@@ -506,9 +522,17 @@ func setup_animation_player() -> void:
 		)
 
 func play_idle_animation() -> void:
+	if animation_tree != null:
+		animation_tree.set(
+			sway_blend_parameter,
+			1.0
+		)
+		animation_tree.active = true
+		return
+	
 	if animation_player == null:
 		return
-
+	
 	if not animation_player.has_animation(
 		idle_animation
 	):
@@ -517,7 +541,7 @@ func play_idle_animation() -> void:
 			% idle_animation
 		)
 		return
-
+	
 	animation_player.play(
 		idle_animation
 	)
@@ -668,6 +692,55 @@ func get_active_ads_speed() -> float:
 	
 	return current_scope.ads_speed
 
+func setup_animation_tree() -> void:
+	animation_tree = null
+	
+	if viewmodel == null:
+		push_error(
+			"ViewModelが設定されていません: %s"
+			% weapon_name
+		)
+		return
+	
+	for child: Node in viewmodel.get_children():
+		if child is AnimationTree:
+			animation_tree = child as AnimationTree
+			break
+	
+	if animation_tree == null:
+		push_error(
+			"ViewModel直下にAnimationTreeがありません: %s"
+			% viewmodel.get_path()
+		)
+		return
+	
+	if animation_player == null:
+		push_error(
+			"AnimationPlayerが取得できていません: %s"
+			% weapon_name
+		)
+		animation_tree = null
+		return
+	
+	if animation_tree.tree_root == null:
+		push_error(
+			"AnimationTreeのTree Rootが設定されていません: %s"
+			% animation_tree.get_path()
+		)
+		animation_tree = null
+		return
+	
+	animation_tree.anim_player = (
+		animation_tree.get_path_to(animation_player)
+	)
+	
+	animation_tree.set(
+		sway_blend_parameter,
+		1.0
+	)
+	
+	animation_tree.active = true
+
 func equip_scope(scope: ScopeAttachment) -> void:
 	if scope == null:
 		push_error(
@@ -814,3 +887,27 @@ func spawn_bullet_impact(
 		)
 	else:
 		impact.global_position = hit_position
+
+func update_sway() -> void:
+	if animation_tree == null:
+		return
+	
+	var multiplier: float = 1.0
+	
+	if is_aiming and current_scope != null:
+		multiplier = clampf(
+			current_scope.sway_multiplier,
+			0.0,
+			1.0
+		)
+	
+	var sway_amount := lerpf(
+		1.0,
+		multiplier,
+		ads_amount
+	)
+	
+	animation_tree.set(
+		sway_blend_parameter,
+		sway_amount
+	)
